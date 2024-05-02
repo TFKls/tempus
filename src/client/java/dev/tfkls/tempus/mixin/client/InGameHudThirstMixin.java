@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
-public abstract class PlayerThirstHudMixin {
+public abstract class InGameHudThirstMixin {
     @Shadow protected abstract PlayerEntity getCameraPlayer();
 
     @Shadow protected abstract int getHeartRows(int heartCount);
