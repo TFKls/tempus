@@ -22,12 +22,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class HungerManagerNutritionMixin implements HungerManagerNutritionInterface {
     @Shadow public abstract int getFoodLevel();
 
-    @Shadow public abstract void update(PlayerEntity player);
-
     @Unique
     private Nutrition.Type nutritionType = Nutrition.Type.NONE;
     @Unique
     private int nutritionLevel = 0;
+    @Unique
+    private int nutritionTickTimer = 0;
     @Override
     public Nutrition.Type tempus$getNutritionType() {
         return nutritionType;
@@ -73,6 +73,7 @@ public abstract class HungerManagerNutritionMixin implements HungerManagerNutrit
         if (nbt.contains("nutritionLevel", NbtElement.NUMBER_TYPE)) {
             this.nutritionLevel = nbt.getInt("nutritionLevel");
             this.nutritionType = Nutrition.Type.values()[nbt.getInt("nutritionType")];
+            this.nutritionTickTimer = nbt.getInt("nutritionTickTimer");
         }
     }
 
@@ -80,13 +81,19 @@ public abstract class HungerManagerNutritionMixin implements HungerManagerNutrit
     private void writeNutritionNbt(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("nutritionLevel", nutritionLevel);
         nbt.putInt("nutritionType", nutritionType.ordinal());
+        nbt.putInt("nutritionTickTimer", nutritionTickTimer);
     }
 
     @Inject(method = "update", at = @At(value = "TAIL"))
     private void runNutritionEffects(PlayerEntity player, CallbackInfo ci) {
-        int currentFoodLevel = getFoodLevel() / 2;
-        PlayerStatusEffector currentEffector = tempus$getNutritionType().toEffector();
-        currentEffector.runEffect(player, Math.min(currentFoodLevel, nutritionLevel));
-        currentEffector.runEffect(player, -nutritionLevel);
+        if (nutritionTickTimer >= 80) {
+            int currentFoodLevel = getFoodLevel() / 2;
+            PlayerStatusEffector currentEffector = tempus$getNutritionType().toEffector();
+            currentEffector.runEffect(player, Math.min(currentFoodLevel, nutritionLevel));
+            currentEffector.runEffect(player, -nutritionLevel);
+            nutritionTickTimer = 0;
+        } else {
+            nutritionTickTimer++;
+        }
     }
 }

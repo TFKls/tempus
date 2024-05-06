@@ -6,7 +6,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
-public class Nutrition {
+public abstract class Nutrition {
     public enum Type {
         NONE,
         CARBOHYDRATE,
