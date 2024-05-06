@@ -26,11 +26,11 @@ public abstract class InGameHudThirstMixin {
     @Unique
     private static final int emptyDropIcon = 16;
     @Unique
-    private static final int halfDropIcon = 16+36+25;
+    private static final int halfDropIcon = 16+45;
     @Unique
     private static final int fullDropIcon = 16+36;
 
-    @Inject(method = "renderStatusBars", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;min(II)I"), cancellable = true)
+    @Inject(method = "renderStatusBars", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Math;min(II)I"))
     void renderThirstBar(DrawContext context, CallbackInfo ci, @Local(name = "t") LocalIntRef renderHeightRef, @Local(name = "n") int renderWidth, @Local(name = "x") int mountHeartCount) {
         MinecraftClient client = ((InGameHudAccessor) this).getClient();
         Random random = ((InGameHudAccessor) this).getRandom();
