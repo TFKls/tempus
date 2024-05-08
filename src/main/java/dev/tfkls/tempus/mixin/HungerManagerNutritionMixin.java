@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static dev.tfkls.tempus.Tempus.LOGGER;
+
 @Mixin(HungerManager.class)
 public abstract class HungerManagerNutritionMixin implements HungerManagerNutritionInterface {
     @Shadow public abstract int getFoodLevel();
@@ -38,11 +40,12 @@ public abstract class HungerManagerNutritionMixin implements HungerManagerNutrit
     }
     @Override
     public void tempus$updateNutrition(Nutrition.Type newType) {
+        LOGGER.info("Current nutrition: {} of {}; delta is {}", nutritionType, nutritionLevel, newType);
         if (nutritionType == Nutrition.Type.NONE) {
             nutritionType = newType;
             nutritionLevel = (newType == Nutrition.Type.NONE ? 0 : 1);
         } else if (nutritionType == newType) {
-            nutritionLevel++;
+            if (nutritionLevel<10) nutritionLevel++;
         } else {
             nutritionLevel--;
             if (nutritionLevel <= 0) {
@@ -50,6 +53,8 @@ public abstract class HungerManagerNutritionMixin implements HungerManagerNutrit
                 nutritionType = Nutrition.Type.NONE;
             }
         }
+        LOGGER.info("New nutrition is: {} of {}", nutritionType, nutritionLevel);
+        nutritionTickTimer = 80;
     }
     @Override
     public void tempus$updateNutrition(Item foodItem) {

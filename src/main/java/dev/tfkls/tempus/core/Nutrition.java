@@ -1,5 +1,8 @@
 package dev.tfkls.tempus.core;
 
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
@@ -54,28 +57,41 @@ public abstract class Nutrition {
     }
 
     public static class Effects {
+
+        private static void addNutritionStatusEffect(PlayerEntity player, StatusEffect effect, int amplifier) {
+            if (amplifier > 0) {
+                player.addStatusEffect(new StatusEffectInstance(effect, 5*20, amplifier-1, true, false, true));
+            }
+        }
+
         public static PlayerStatusEffector CARBOHYDRATE = PlayerStatusEffector.of(
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.SPEED, (grade-1)/3);
+                    addNutritionStatusEffect(player,StatusEffects.JUMP_BOOST, Math.max(grade-3, 0)/3);
                 },
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.WEAKNESS, Math.max(grade-2, 0)/3);
+                    addNutritionStatusEffect(player,StatusEffects.MINING_FATIGUE, Math.max(grade-4, 0)/3);
                 }
         );
         public static PlayerStatusEffector FAT = PlayerStatusEffector.of(
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.SATURATION, (grade-1)/3);
+                    addNutritionStatusEffect(player,StatusEffects.SLOW_FALLING, Math.max(grade-3, 0)/3);
                 },
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.SLOWNESS, Math.max(grade-2, 0)/3);
+                    addNutritionStatusEffect(player,StatusEffects.NAUSEA, Math.max(grade-4, 0)/3);
                 }
         );
         public static PlayerStatusEffector PROTEIN = PlayerStatusEffector.of(
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.STRENGTH, (grade-1)/3);
+                    addNutritionStatusEffect(player,StatusEffects.DOLPHINS_GRACE, Math.max(grade-3, 0)/3);
                 },
                 (player, grade) -> {
-
+                    addNutritionStatusEffect(player,StatusEffects.HUNGER, Math.max(grade-2, 0)/3);
+                    addNutritionStatusEffect(player,StatusEffects.NAUSEA, Math.max(grade-4, 0)/3);
                 }
         );
     }
