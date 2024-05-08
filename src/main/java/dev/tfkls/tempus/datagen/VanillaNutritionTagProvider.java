@@ -17,12 +17,20 @@ public class VanillaNutritionTagProvider extends FabricTagProvider.ItemTagProvid
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         getOrCreateTagBuilder(Nutrition.Tags.CARBOHYDRATE)
                 .add(Items.APPLE)
-                .add(Items.BAKED_POTATO);
+                .add(Items.BAKED_POTATO)
+                .add(Items.BEETROOT)
+                .add(Items.BEETROOT_SOUP);
 
         getOrCreateTagBuilder(Nutrition.Tags.FAT)
-                .add(Items.COOKIE);
+                .add(Items.COOKIE)
+                .add(Items.MUSHROOM_STEW)
+                .add(Items.PUMPKIN_PIE)
+                .add(Items.BEEF);
 
         getOrCreateTagBuilder(Nutrition.Tags.PROTEIN)
-                .add(Items.COOKED_CHICKEN);
+                .add(Items.COOKED_CHICKEN)
+                .add(Items.COOKED_COD)
+                .add(Items.COOKED_MUTTON)
+                .add(Items.COOKED_PORKCHOP);
     }
 }
