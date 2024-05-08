@@ -19,48 +19,62 @@ public class TemperatureManager {
 
             }
     );
+
     public void update(PlayerEntity player) {
         temperatureTickTimer++;
         if (temperatureTickTimer >= temperatureTickThreshold) {
             temperatureTickTimer = 0;
             float oldTemperature = temperature;
-            insulation = computeInsulation(player);
 
-            // Internal heat stabilization
-            applyInternalModifier(0, 1+insulation);
+            DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
+            deltaBuilder.addUninsulatedSource(0, 0.01f);
 
-            // Direct environmental effects
-            if (!player.isCreative()) {
-                float modifier = player.hasStatusEffect(StatusEffects.WATER_BREATHING) && (temperature >= 5) ? 0 : 1;
-                if (player.isTouchingWater()) {
-                    applyInternalModifier(-7, 1f*modifier);
-                } else if (player.isWet()) {
-                    applyInternalModifier(-5, 0.5f*modifier);
-                }
+            if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 if (player.isSubmergedInWater()) {
-                    applyInternalModifier(-10, 2f*modifier);
+                    deltaBuilder.addSource(-10, 0.05f);
+                } else if (player.isTouchingWater()) {
+                    deltaBuilder.addSource(-5, 0.05f);
+                } else if (player.isWet()) {
+                    deltaBuilder.addSource(-2, 0.01f);
                 }
             }
 
+            deltaBuilder.applyDelta();
             LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature-oldTemperature);
             effector.runEffect(player, MathUtil.roundUp(temperature));
         }
     }
 
-    private static float computeInsulation(PlayerEntity player) {
-        return 0;
+    public class DeltaBuilder {
+        int tickCycle;
+        float temperatureDelta;
+
+        public DeltaBuilder() {
+            temperatureDelta = 0;
+            tickCycle = 20;
+        }
+        public DeltaBuilder(int tickCycle) {
+            temperatureDelta = 0;
+            this.tickCycle = tickCycle;
+        }
+
+        public DeltaBuilder addSource(float sourceTemperature, float heatConductivity) {
+            temperatureDelta += heatConductivity / (1 + insulation) * (sourceTemperature - temperature);
+            return this;
+        }
+
+        public DeltaBuilder addUninsulatedSource(float sourceTemperature, float heatConductivity) {
+            temperatureDelta += heatConductivity * (sourceTemperature - temperature);
+            return this;
+        }
+
+        public void applyDelta() {
+            temperature += temperatureDelta*((float) tickCycle/20);
+        }
     }
-    static float computeTemperatureDelta(float objectTemperature, float externalTemperature, float externalHeatConductivity) {
-        return externalHeatConductivity * (externalTemperature - objectTemperature);
-    }
-    private void applyInternalModifier(float temperature, float heatConductivity) {
-        applyModifier(temperature, heatConductivity, temperatureTickThreshold);
-    }
-    public void applyModifier(float temperature, float heatConductivity) {
-        this.temperature += computeTemperatureDelta(this.temperature, temperature, ((heatConductivity)/(1+insulation)));
-    }
-    public void applyModifier(float temperature, float heatConductivity, int tickCycle) {
-        this.temperature += computeTemperatureDelta(this.temperature, temperature, ((heatConductivity)/(1+insulation)) * ((float) tickCycle /20));
+
+    public void applySingular(float sourceTemperature, float heatConductivity) {
+        temperature += heatConductivity * (sourceTemperature - temperature);
     }
 
     public float getTemperature() {

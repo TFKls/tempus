@@ -24,19 +24,19 @@ public class PlayerEntityTemperatureMixin {
     public void damageUpdateTemperature(DamageSource source, float amount, CallbackInfo ci) {
         switch (source.getType().msgId()) {
             case "inFire":
-                temperatureManager.applyModifier(20, 0.4f);
+                temperatureManager.applySingular(20, 0.1f);
                 break;
             case "onFire":
-                temperatureManager.applyModifier(20, 0.1f);
+                temperatureManager.applySingular(20, 0.05f);
                 break;
             case "lava":
-                temperatureManager.applyModifier(30, 0.8f);
+                temperatureManager.applySingular(30, 0.1f);
                 break;
             case "hotFloor":
-                temperatureManager.applyModifier(20, 0.2f);
+                temperatureManager.applySingular(15, 0.2f);
                 break;
             case "lightningBolt":
-                temperatureManager.applyModifier(50, 0.1f);
+                temperatureManager.applySingular(50, 0.3f);
                 break;
         }
     }
