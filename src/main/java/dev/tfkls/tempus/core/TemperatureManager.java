@@ -3,15 +3,17 @@ package dev.tfkls.tempus.core;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
 public class TemperatureManager {
-    private float temperature = 0;
-    private float insulation = 0;
+    protected float temperature = 0;
+    protected float insulation = 0;
     private int temperatureTickTimer;
     private final int temperatureTickThreshold = 40;
-    PlayerStatusEffector effector = PlayerStatusEffector.of(
+    protected PlayerStatusEffector effector = PlayerStatusEffector.of(
             (player, temp) -> {
 
             },
@@ -19,6 +21,13 @@ public class TemperatureManager {
 
             }
     );
+
+    public float getTemperature() {
+        return temperature;
+    }
+    public float getInsulation() {
+        return insulation;
+    }
 
     public void update(PlayerEntity player) {
         temperatureTickTimer++;
@@ -77,10 +86,20 @@ public class TemperatureManager {
         temperature += heatConductivity * (sourceTemperature - temperature);
     }
 
-    public float getTemperature() {
-        return temperature;
+    public void readNbt(NbtCompound nbt) {
+        if (nbt.contains("temperatureValue", NbtElement.NUMBER_TYPE)) {
+            temperature = nbt.getFloat("temperatureValue");
+            insulation = nbt.getFloat("temperatureInsulation");
+            temperatureTickTimer = nbt.getInt("temperatureTickTimer");
+        }
     }
-    public float getInsulation() {
-        return insulation;
+    public void writeNbt(NbtCompound nbt) {
+        nbt.putFloat("temperatureValue", temperature);
+        nbt.putFloat("temperatureInsulation", insulation);
+        nbt.putInt("temperatureTickTimer", temperatureTickTimer);
+    }
+
+    public interface MixinAccessor {
+        public TemperatureManager tempus$getTemperatureManager();
     }
 }
