@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -59,8 +60,10 @@ public abstract class HungerManagerNutritionMixin implements HungerManagerNutrit
     @Override
     public void tempus$updateNutrition(Item foodItem) {
         RegistryEntry<Item> registryEntry = Registries.ITEM.getEntry(foodItem);
+        TagKey<Item> tag;
         for (var type : Nutrition.Type.values()) {
-            if (registryEntry.isIn(type.toTag())) {
+            tag = type.toTag();
+            if (tag != null && registryEntry.isIn(tag)) {
                 tempus$updateNutrition(type);
                 return;
             }
