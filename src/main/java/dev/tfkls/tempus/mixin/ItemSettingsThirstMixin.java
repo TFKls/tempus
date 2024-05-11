@@ -4,7 +4,6 @@ import dev.tfkls.tempus.core.DrinkComponent;
 import dev.tfkls.tempus.core.ThirstManager;
 import net.minecraft.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(targets = "net.minecraft.item.Item$Settings")

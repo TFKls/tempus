@@ -9,7 +9,8 @@
     "ItemThirstMixin",
     "PlayerEntityThirstMixin",
     "PotionItemThirstMixin",
-    "ItemSettingsThirstMixin"
+    "ItemSettingsThirstMixin",
+    "ItemsThirstMixin"
   ],
   "injectors": {
     "defaultRequire": 1

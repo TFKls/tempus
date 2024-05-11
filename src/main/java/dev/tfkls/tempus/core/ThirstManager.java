@@ -3,10 +3,8 @@ package dev.tfkls.tempus.core;
 import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.world.World;
 
 public class ThirstManager {
     private int thirstLevel = 20;
