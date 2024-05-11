@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
@@ -21,6 +22,11 @@ public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor
 
     @Unique
     protected DrinkComponent drinkComponent = null;
+
+    @Inject(method = "<init>", at = @At(value = "TAIL"))
+    public void onInit(Item.Settings settings, CallbackInfo ci) {
+        this.drinkComponent = ((ThirstManager.MixinItemSettingsAccessor)settings).tempus$getDrinkComponent();
+    }
 
     @Unique
     public boolean tempus$isDrink() {

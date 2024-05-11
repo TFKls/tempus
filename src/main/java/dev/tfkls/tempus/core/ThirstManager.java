@@ -2,6 +2,7 @@ package dev.tfkls.tempus.core;
 
 import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -50,6 +51,11 @@ public class ThirstManager {
     public void writeNbt(NbtCompound nbt) {
         nbt.putInt("thirstLevel", thirstLevel);
         nbt.putInt("thirstTickTimer", thirstTickTimer);
+    }
+
+    public interface MixinItemSettingsAccessor {
+        Item.Settings tempus$setDrinkComponent(DrinkComponent drinkComponent);
+        DrinkComponent tempus$getDrinkComponent();
     }
 
     public interface MixinItemAccessor {

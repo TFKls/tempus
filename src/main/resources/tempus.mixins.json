@@ -8,7 +8,8 @@
     "PlayerEntityTemperatureMixin",
     "ItemThirstMixin",
     "PlayerEntityThirstMixin",
-    "PotionItemThirstMixin"
+    "PotionItemThirstMixin",
+    "ItemSettingsThirstMixin"
   ],
   "injectors": {
     "defaultRequire": 1
