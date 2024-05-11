@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor {
+
+    @Shadow public abstract boolean isFood();
 
     @Unique
     protected DrinkComponent drinkComponent = null;
@@ -29,10 +32,11 @@ public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor
         return drinkComponent;
     }
 
-    @Inject(method = "finishUsing", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "finishUsing", at = @At(value = "HEAD"))
     public void injectFinishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         if (this.tempus$isDrink() && user instanceof PlayerEntity) {
-            cir.setReturnValue(((ThirstManager.MixinPlayerEntityAccessor)user).tempus$drink(world, stack));
+            ((ThirstManager.MixinPlayerEntityAccessor)user).tempus$getThirstManager().drink(this);
+            if (!this.isFood() && !((PlayerEntity) user).getAbilities().creativeMode) stack.decrement(1);
         }
     }
 }

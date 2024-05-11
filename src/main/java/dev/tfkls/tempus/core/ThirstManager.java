@@ -33,7 +33,7 @@ public class ThirstManager {
             if (thirstLevel<=0) player.damage(player.getDamageSources().starve(), 1.0f);
             else {
                 thirstLevel--;
-                Tempus.LOGGER.info("Thirst level is {}, tick count: {}",thirstLevel,thirstTickTimer);
+                Tempus.LOGGER.info("Thirst level is {}, tick count: {}",getThirst(),thirstTickTimer);
             }
 
             thirstTickTimer=0;
@@ -59,6 +59,5 @@ public class ThirstManager {
 
     public interface MixinPlayerEntityAccessor {
         ThirstManager tempus$getThirstManager();
-        ItemStack tempus$drink(World world, ItemStack stack);
     }
 }
