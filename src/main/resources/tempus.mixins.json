@@ -5,7 +5,9 @@
   "mixins": [
     "CakeNutritionMixin",
     "HungerManagerNutritionMixin",
-    "PlayerEntityTemperatureMixin"
+    "PlayerEntityTemperatureMixin",
+    "ItemThirstMixin",
+    "PlayerEntityThirstMixin"
   ],
   "injectors": {
     "defaultRequire": 1
