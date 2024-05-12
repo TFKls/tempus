@@ -4,6 +4,7 @@ import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -53,7 +54,8 @@ public class ThirstManager {
         thirstTickTimer++;
         if (thirstTickTimer>=80) {
 
-            if (thirstLevel<=0) player.damage(player.getDamageSources().starve(), 1.0f);
+            if (thirstLevel<=0)
+                player.damage(((MixinDamageSourcesAccessor)player.getDamageSources()).tempus$thirst(), 1.0f);
             else {
                 thirstLevel--;
                 sync = true;
@@ -86,6 +88,9 @@ public class ThirstManager {
         DrinkComponent tempus$getDrinkComponent();
     }
 
+    public interface MixinDamageSourcesAccessor {
+        DamageSource tempus$thirst();
+    }
     public interface MixinPlayerEntityAccessor {
         ThirstManager tempus$getThirstManager();
     }
