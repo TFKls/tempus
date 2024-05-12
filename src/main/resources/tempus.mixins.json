@@ -4,13 +4,15 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "CakeNutritionMixin",
+    "DamageSourcesMixin",
+    "DamageTypesMixin",
     "HungerManagerNutritionMixin",
-    "PlayerEntityTemperatureMixin",
-    "ItemThirstMixin",
-    "PlayerEntityThirstMixin",
-    "PotionItemThirstMixin",
     "ItemSettingsThirstMixin",
-    "ItemsThirstMixin"
+    "ItemsThirstMixin",
+    "ItemThirstMixin",
+    "PlayerEntityTemperatureMixin",
+    "PlayerEntityThirstMixin",
+    "PotionItemThirstMixin"
   ],
   "injectors": {
     "defaultRequire": 1
