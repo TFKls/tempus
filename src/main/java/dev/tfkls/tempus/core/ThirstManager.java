@@ -15,6 +15,7 @@ public class ThirstManager {
     private int thirstLevel = 20;
     private int thirstTickTimer;
     private final PlayerEntity player;
+    private boolean sync = true;
 
     public ThirstManager(PlayerEntity player) {
         this.player = player;
@@ -34,7 +35,7 @@ public class ThirstManager {
 
     public void add(int val) {
         this.thirstLevel = Math.min(this.thirstLevel+val, 20);
-        syncThirst();
+        sync = true;
     }
 
     public void drink(MixinItemAccessor item) {
@@ -45,13 +46,17 @@ public class ThirstManager {
     }
 
     public void update(PlayerEntity player) {
+        if (sync) {
+            syncThirst();
+            sync = false;
+        }
         thirstTickTimer++;
         if (thirstTickTimer>=80) {
 
             if (thirstLevel<=0) player.damage(player.getDamageSources().starve(), 1.0f);
             else {
                 thirstLevel--;
-                syncThirst();
+                sync = true;
                 Tempus.LOGGER.info("Thirst level is {}, tick count: {}",getThirst(),thirstTickTimer);
             }
 
