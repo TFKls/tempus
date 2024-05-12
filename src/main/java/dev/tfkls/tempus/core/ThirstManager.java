@@ -63,7 +63,6 @@ public class ThirstManager {
         if (nbt.contains("thirstLevel", NbtElement.NUMBER_TYPE)) {
             this.thirstLevel = nbt.getInt("thirstLevel");
             this.thirstTickTimer = nbt.getInt("thirstTickTimer");
-            System.out.println("aaa");
         }
     }
 
