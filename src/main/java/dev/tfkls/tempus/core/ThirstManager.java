@@ -55,7 +55,7 @@ public class ThirstManager {
         if (thirstTickTimer>=80) {
 
             if (thirstLevel<=0)
-                player.damage(((MixinDamageSourcesAccessor)player.getDamageSources()).tempus$thirst(), 1.0f);
+                player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 1.0f);
             else {
                 thirstLevel--;
                 sync = true;
@@ -88,9 +88,6 @@ public class ThirstManager {
         DrinkComponent tempus$getDrinkComponent();
     }
 
-    public interface MixinDamageSourcesAccessor {
-        DamageSource tempus$thirst();
-    }
     public interface MixinPlayerEntityAccessor {
         ThirstManager tempus$getThirstManager();
     }
