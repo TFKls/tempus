@@ -2,6 +2,7 @@ package dev.tfkls.tempus.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import dev.tfkls.tempus.core.ThirstManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -41,7 +42,7 @@ public abstract class InGameHudThirstMixin {
         client.getProfiler().swap("thirst");
         if (player.isSubmergedIn(FluidTags.WATER) || player.getAir() < player.getMaxAir()) return; // This ensures we don't clash with air indicators
 
-        int currentThirst = 15; // TODO: Add logic to show actual thirst levels (after server-side implementation)
+        int currentThirst = ((ThirstManager.MixinPlayerEntityAccessor)player).tempus$getThirstManager().getThirst(); // TODO: Add logic to show actual thirst levels (after server-side implementation)
         float currentHydration = 0.5f;
 
         for (int loc = 0; loc < 10; loc++) {

@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(targets = "net.minecraft.item.Item$Settings")
+@Mixin(Item.Settings.class)
 public abstract class ItemSettingsThirstMixin implements ThirstManager.MixinItemSettingsAccessor {
 
 	@Unique

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerEntityThirstMixin implements ThirstManager.MixinPlayerEntityAccessor {
 
     @Unique
-    protected ThirstManager thirstManager = new ThirstManager();
+    protected ThirstManager thirstManager = new ThirstManager((PlayerEntity) (Object)this);
 
     @Unique
     public ThirstManager tempus$getThirstManager() {

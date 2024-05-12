@@ -1,14 +1,32 @@
 package dev.tfkls.tempus.core;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.networking.Packets;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ThirstManager {
     private int thirstLevel = 20;
     private int thirstTickTimer;
+    private final PlayerEntity player;
+
+    public ThirstManager(PlayerEntity player) {
+        this.player = player;
+    }
+
+    public void syncThirst() {
+        if (player.getWorld().isClient()) return;
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeInt(thirstLevel);
+        buffer.writeInt(thirstTickTimer);
+        ServerPlayNetworking.send((ServerPlayerEntity)player, Packets.THIRST, buffer);
+    }
 
     public int getThirst() {
         return thirstLevel;
@@ -16,6 +34,7 @@ public class ThirstManager {
 
     public void add(int val) {
         this.thirstLevel = Math.min(this.thirstLevel+val, 20);
+        syncThirst();
     }
 
     public void drink(MixinItemAccessor item) {
@@ -32,6 +51,7 @@ public class ThirstManager {
             if (thirstLevel<=0) player.damage(player.getDamageSources().starve(), 1.0f);
             else {
                 thirstLevel--;
+                syncThirst();
                 Tempus.LOGGER.info("Thirst level is {}, tick count: {}",getThirst(),thirstTickTimer);
             }
 
@@ -43,6 +63,7 @@ public class ThirstManager {
         if (nbt.contains("thirstLevel", NbtElement.NUMBER_TYPE)) {
             this.thirstLevel = nbt.getInt("thirstLevel");
             this.thirstTickTimer = nbt.getInt("thirstTickTimer");
+            System.out.println("aaa");
         }
     }
 
