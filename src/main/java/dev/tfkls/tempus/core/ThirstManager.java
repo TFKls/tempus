@@ -4,9 +4,7 @@ import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
@@ -39,9 +37,11 @@ public class ThirstManager {
         sync = true;
     }
 
-    public void drink(MixinItemAccessor item) {
-        if (item.tempus$isDrink()) {
-            DrinkComponent drinkComponent = item.tempus$getDrinkComponent();
+    public void drink(DrinkComponent.MixinAccessor item) {
+        drink(item.tempus$getDrinkComponent());
+    }
+    public void drink(DrinkComponent drinkComponent) {
+        if (drinkComponent != null) {
             this.add(drinkComponent.getThirst());
         }
     }
@@ -78,17 +78,7 @@ public class ThirstManager {
         nbt.putInt("thirstTickTimer", thirstTickTimer);
     }
 
-    public interface MixinItemSettingsAccessor {
-        Item.Settings tempus$setDrinkComponent(DrinkComponent drinkComponent);
-        DrinkComponent tempus$getDrinkComponent();
-    }
-
-    public interface MixinItemAccessor {
-        boolean tempus$isDrink();
-        DrinkComponent tempus$getDrinkComponent();
-    }
-
-    public interface MixinPlayerEntityAccessor {
+    public interface MixinAccessor {
         ThirstManager tempus$getThirstManager();
     }
 }

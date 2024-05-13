@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityThirstMixin implements ThirstManager.MixinPlayerEntityAccessor {
+public abstract class PlayerEntityThirstMixin implements ThirstManager.MixinAccessor {
 
     @Unique
     protected ThirstManager thirstManager = new ThirstManager((PlayerEntity) (Object)this);

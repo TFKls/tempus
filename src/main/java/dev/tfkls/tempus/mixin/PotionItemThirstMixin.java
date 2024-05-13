@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
+import dev.tfkls.tempus.core.DrinkComponent;
 import dev.tfkls.tempus.core.ThirstManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,6 @@ public abstract class PotionItemThirstMixin {
 
     @Inject(method = "finishUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"))
     public void injectFinishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        ((ThirstManager.MixinPlayerEntityAccessor)user).tempus$getThirstManager().drink((ThirstManager.MixinItemAccessor)this);
+        ((ThirstManager.MixinAccessor)user).tempus$getThirstManager().drink((DrinkComponent.MixinAccessor) this);
     }
 }

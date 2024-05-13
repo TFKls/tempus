@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
-public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor {
+public abstract class ItemThirstMixin implements DrinkComponent.MixinAccessor {
 
     @Shadow public abstract boolean isFood();
 
@@ -25,12 +25,7 @@ public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     public void onInit(Item.Settings settings, CallbackInfo ci) {
-        this.drinkComponent = ((ThirstManager.MixinItemSettingsAccessor)settings).tempus$getDrinkComponent();
-    }
-
-    @Unique
-    public boolean tempus$isDrink() {
-        return this.tempus$getDrinkComponent()!=null;
+        this.drinkComponent = ((DrinkComponent.MixinAccessor) settings).tempus$getDrinkComponent();
     }
 
     @Unique
@@ -40,8 +35,8 @@ public abstract class ItemThirstMixin implements ThirstManager.MixinItemAccessor
 
     @Inject(method = "finishUsing", at = @At(value = "HEAD"))
     public void injectFinishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        if (this.tempus$isDrink() && user instanceof PlayerEntity) {
-            ((ThirstManager.MixinPlayerEntityAccessor)user).tempus$getThirstManager().drink(this);
+        if (this.tempus$isDrinkable() && user instanceof PlayerEntity) {
+            ((ThirstManager.MixinAccessor)user).tempus$getThirstManager().drink(tempus$getDrinkComponent());
             if (!this.isFood() && !((PlayerEntity) user).getAbilities().creativeMode) stack.decrement(1);
         }
     }

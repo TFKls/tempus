@@ -10,4 +10,14 @@ public class DrinkComponent {
     public DrinkComponent(int thirst) {
         this.thirst = thirst;
     }
+
+    public interface MixinAccessor {
+        public DrinkComponent tempus$getDrinkComponent();
+        public default boolean tempus$isDrinkable() {
+            return tempus$getDrinkComponent() != null;
+        }
+    }
+    public interface MutableMixinAccessor extends MixinAccessor {
+        public void tempus$setDrinkComponent(DrinkComponent newDrink);
+    }
 }

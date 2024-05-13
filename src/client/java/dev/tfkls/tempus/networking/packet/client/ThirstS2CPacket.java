@@ -9,7 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 
 public class ThirstS2CPacket {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
-        ThirstManager.MixinPlayerEntityAccessor player = (ThirstManager.MixinPlayerEntityAccessor) client.player;
+        ThirstManager.MixinAccessor player = (ThirstManager.MixinAccessor) client.player;
         if (player == null) return;
         NbtCompound nbt = new NbtCompound();
         nbt.putInt("thirstLevel", buf.readInt());
