@@ -67,6 +67,13 @@ public class NutritionManager {
         add(Nutrition.Type.NONE);
     }
 
+    public void setState(Nutrition.Type type, int level) {
+        nutritionType = (level == 0) ? Nutrition.Type.NONE : type;
+        nutritionLevel = (type == Nutrition.Type.NONE) ? 0 : level;
+        nutritionTickTimer = 80;
+        cachedEffector = nutritionType.toEffector();
+    }
+
     public void readNbt(NbtCompound nbt) {
         if (nbt.contains("nutritionLevel", NbtElement.NUMBER_TYPE)) {
             this.nutritionLevel = nbt.getInt("nutritionLevel");

@@ -1,7 +1,10 @@
 package dev.tfkls.tempus;
 
+import dev.tfkls.tempus.command.NutritionCommand;
+import dev.tfkls.tempus.core.Nutrition;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +19,9 @@ public class Tempus implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
 		LOGGER.info("Hello Fabric world!");
+
+		LOGGER.info("Registering commands...");
+		NutritionCommand.register();
 	}
 }
