@@ -1,6 +1,5 @@
 package dev.tfkls.tempus.command;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.LiteralMessage;
@@ -12,8 +11,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import dev.tfkls.tempus.core.Nutrition;
 import dev.tfkls.tempus.core.NutritionManager;
+import dev.tfkls.tempus.core.NutritionType;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
@@ -27,6 +26,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static net.minecraft.server.command.CommandManager.*;
@@ -55,23 +55,23 @@ public class NutritionCommand implements CommandRegistrationCallback {
         dispatcher.register(literal("nutrition")
                 .requires(source -> source.hasPermissionLevel(2))
                 .then(literal("clear")
-                        .executes(context -> executeClear(context.getSource(), ImmutableList.of(context.getSource().getPlayerOrThrow())))
+                        .executes(context -> executeClear(context.getSource(), List.of(context.getSource().getPlayerOrThrow())))
                         .then(argument("targets", EntityArgumentType.players()).executes(context -> executeClear(context.getSource(), context.getArgument("targets", Collection.class)))))
                 .then(literal("query")
-                        .executes(context -> executeQuery(context.getSource(), ImmutableList.of(context.getSource().getPlayerOrThrow())))
+                        .executes(context -> executeQuery(context.getSource(), List.of(context.getSource().getPlayerOrThrow())))
                         .then(argument("targets", EntityArgumentType.players()).executes(context -> executeQuery(context.getSource(), context.getArgument("targets", Collection.class)))))
                 .then(literal("set")
                         .then(argument("nutrition", new NutritionArgumentType())
                                 .then(argument("level", IntegerArgumentType.integer(1, 10))
-                                        .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", Nutrition.Type.class), context.getArgument("level", Integer.class), ImmutableList.of(context.getSource().getPlayerOrThrow())))
+                                        .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", NutritionType.class), context.getArgument("level", Integer.class), List.of(context.getSource().getPlayerOrThrow())))
                                         .then(argument("targets", EntityArgumentType.players())
-                                                .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", Nutrition.Type.class), context.getArgument("level", Integer.class), context.getArgument("targets", Collection.class))))))
+                                                .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", NutritionType.class), context.getArgument("level", Integer.class), context.getArgument("targets", Collection.class))))))
                 )
         );
     }
 
     private static int executeClear(ServerCommandSource source, Collection<PlayerEntity> players) {
-        return executeSet(source, Nutrition.Type.NONE, 0, players);
+        return executeSet(source, NutritionType.NONE, 0, players);
     }
 
     private static int executeQuery(ServerCommandSource source, Collection<PlayerEntity> players) {
@@ -82,12 +82,12 @@ public class NutritionCommand implements CommandRegistrationCallback {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeSet(ServerCommandSource source, Nutrition.Type type, int level, Collection<PlayerEntity> players) {
+    private static int executeSet(ServerCommandSource source, NutritionType type, int level, Collection<PlayerEntity> players) {
         for (PlayerEntity player : players) {
             ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().setState(type, level);
         }
         if (players.size() == 1) {
-            PlayerEntity player = players.toArray(new PlayerEntity[0])[0];
+            PlayerEntity player = players.iterator().next();
             NutritionManager manager = ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager();
             source.sendFeedback(() -> nutritionToText(player.getDisplayName().copy().append("'s new nutrition: "), manager.getNutritionType(), manager.getNutritionLevel()), true);
         } else {
@@ -96,16 +96,16 @@ public class NutritionCommand implements CommandRegistrationCallback {
         return Command.SINGLE_SUCCESS;
     }
 
-    static class NutritionArgumentType implements ArgumentType<Nutrition.Type> {
+    static class NutritionArgumentType implements ArgumentType<NutritionType> {
 
         @Override
-        public Nutrition.Type parse(StringReader reader) throws CommandSyntaxException {
+        public NutritionType parse(StringReader reader) throws CommandSyntaxException {
             if (!reader.canRead()) {
                 reader.skip();
             }
             String maybeType = reader.readUnquotedString();
-            for (var type : Nutrition.Type.values()) {
-                if (type == Nutrition.Type.NONE) continue;
+            for (var type : NutritionType.values()) {
+                if (type == NutritionType.NONE) continue;
                 if (maybeType.equals(type.toString().toLowerCase())) {
                     return type;
                 }
@@ -115,7 +115,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
 
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-            for (var type : ImmutableList.of("carbohydrate", "fat", "protein")) {
+            for (var type : List.of("carbohydrate", "fat", "protein")) {
                 if (CommandSource.shouldSuggest(builder.getRemaining(), type)) {
                     builder.suggest(type);
                 }
@@ -125,7 +125,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
     }
 
     // TODO: add color formatting
-    private static MutableText nutritionToText(MutableText appendTo, Nutrition.Type type, int level) {
+    private static MutableText nutritionToText(MutableText appendTo, NutritionType type, int level) {
         appendTo.append(type.toString().toLowerCase());
         appendTo.append(" (" + level + "/10)");
         return appendTo;

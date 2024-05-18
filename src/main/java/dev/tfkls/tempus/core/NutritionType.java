@@ -9,55 +9,29 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class Nutrition {
-    public enum Type {
-        NONE,
-        CARBOHYDRATE,
-        FAT,
-        PROTEIN;
+public enum NutritionType {
+    NONE(null, PlayerStatusEffector.NONE),
+    CARBOHYDRATE(Tags.CARBOHYDRATE, Effects.CARBOHYDRATE),
+    FAT(Tags.FAT, Effects.FAT),
+    PROTEIN(Tags.PROTEIN, Effects.PROTEIN);
 
-        public TagKey<Item> toTag() {
-            switch (this) {
-                case NONE -> {
-                    return null;
-                }
-                case CARBOHYDRATE -> {
-                    return Tags.CARBOHYDRATE;
-                }
-                case FAT -> {
-                    return Tags.FAT;
-                }
-                case PROTEIN -> {
-                    return Tags.PROTEIN;
-                }
-            }
-            return null;
-        }
-
-        public PlayerStatusEffector toEffector() {
-            switch (this) {
-                case CARBOHYDRATE -> {
-                    return Effects.CARBOHYDRATE;
-                }
-                case FAT -> {
-                    return Effects.FAT;
-                }
-                case PROTEIN -> {
-                    return Effects.PROTEIN;
-                }
-            }
-            return PlayerStatusEffector.NONE;
-        }
+    @Nullable
+    public final TagKey<Item> tag;
+    public final PlayerStatusEffector effector;
+    NutritionType(@Nullable TagKey<Item> tag, PlayerStatusEffector effector) {
+        this.tag = tag;
+        this.effector = effector;
     }
 
-    public static class Tags {
+    static class Tags {
         public static final TagKey<Item> CARBOHYDRATE = TagKey.of(RegistryKeys.ITEM, new Identifier("tempus", "nutrition_carbohydrate"));
         public static final TagKey<Item> FAT = TagKey.of(RegistryKeys.ITEM, new Identifier("tempus", "nutrition_fat"));
         public static final TagKey<Item> PROTEIN = TagKey.of(RegistryKeys.ITEM, new Identifier("tempus", "nutrition_protein"));
     }
 
-    public static class Effects {
+    static class Effects {
 
         private static void addNutritionStatusEffect(PlayerEntity player, StatusEffect effect, int amplifier) {
             if (amplifier > 0) {

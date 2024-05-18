@@ -11,7 +11,7 @@ import net.minecraft.registry.tag.TagKey;
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
 public class NutritionManager {
-    private Nutrition.Type nutritionType = Nutrition.Type.NONE;
+    private NutritionType nutritionType = NutritionType.NONE;
     private int nutritionLevel = 0;
     private int nutritionTickTimer = 0;
     private PlayerStatusEffector cachedEffector = PlayerStatusEffector.NONE;
@@ -20,7 +20,7 @@ public class NutritionManager {
         return nutritionLevel;
     }
 
-    public Nutrition.Type getNutritionType() {
+    public NutritionType getNutritionType() {
         return nutritionType;
     }
 
@@ -34,19 +34,19 @@ public class NutritionManager {
         }
     }
 
-    public void add(Nutrition.Type newType) {
+    public void add(NutritionType newType) {
         LOGGER.info("Current nutrition: {} of {}; Δ {}", nutritionType, nutritionLevel, newType);
-        if (nutritionType == Nutrition.Type.NONE) {
+        if (nutritionType == NutritionType.NONE) {
             nutritionType = newType;
-            nutritionLevel = (newType == Nutrition.Type.NONE ? 0 : 1);
-            cachedEffector = newType.toEffector();
+            nutritionLevel = (newType == NutritionType.NONE ? 0 : 1);
+            cachedEffector = newType.effector;
         } else if (nutritionType == newType) {
             if (nutritionLevel < 10) nutritionLevel++;
         } else {
             nutritionLevel--;
             if (nutritionLevel <= 0) {
                 nutritionLevel = 0;
-                nutritionType = Nutrition.Type.NONE;
+                nutritionType = NutritionType.NONE;
                 cachedEffector = PlayerStatusEffector.NONE;
             }
         }
@@ -57,27 +57,27 @@ public class NutritionManager {
     public void add(Item foodItem) {
         RegistryEntry<Item> registryEntry = Registries.ITEM.getEntry(foodItem);
         TagKey<Item> tag;
-        for (var type : Nutrition.Type.values()) {
-            tag = type.toTag();
+        for (var type : NutritionType.values()) {
+            tag = type.tag;
             if (tag != null && registryEntry.isIn(tag)) {
                 add(type);
                 return;
             }
         }
-        add(Nutrition.Type.NONE);
+        add(NutritionType.NONE);
     }
 
-    public void setState(Nutrition.Type type, int level) {
-        nutritionType = (level == 0) ? Nutrition.Type.NONE : type;
-        nutritionLevel = (type == Nutrition.Type.NONE) ? 0 : level;
+    public void setState(NutritionType type, int level) {
+        nutritionType = (level == 0) ? NutritionType.NONE : type;
+        nutritionLevel = (type == NutritionType.NONE) ? 0 : level;
         nutritionTickTimer = 80;
-        cachedEffector = nutritionType.toEffector();
+        cachedEffector = nutritionType.effector;
     }
 
     public void readNbt(NbtCompound nbt) {
         if (nbt.contains("nutritionLevel", NbtElement.NUMBER_TYPE)) {
             this.nutritionLevel = nbt.getInt("nutritionLevel");
-            this.nutritionType = Nutrition.Type.values()[nbt.getInt("nutritionType")];
+            this.nutritionType = NutritionType.values()[nbt.getInt("nutritionType")];
             this.nutritionTickTimer = nbt.getInt("nutritionTickTimer");
         }
     }
