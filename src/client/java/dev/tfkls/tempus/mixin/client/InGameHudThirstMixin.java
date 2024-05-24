@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -42,7 +43,7 @@ public abstract class InGameHudThirstMixin {
         client.getProfiler().swap("thirst");
         if (player.isSubmergedIn(FluidTags.WATER) || player.getAir() < player.getMaxAir()) return; // This ensures we don't clash with air indicators
 
-        int currentThirst = ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().getThirst(); // TODO: Add logic to show actual thirst levels (after server-side implementation)
+        int currentThirst = ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().getThirst();
         float currentHydration = 0.5f;
 
         for (int loc = 0; loc < 10; loc++) {

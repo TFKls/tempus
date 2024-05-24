@@ -33,6 +33,7 @@ public class ThirstManager {
     }
 
     public void add(int val) {
+        if (player.getWorld().isClient()) return;
         this.thirstLevel = Math.min(this.thirstLevel+val, 20);
         sync = true;
     }
