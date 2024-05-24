@@ -1,6 +1,8 @@
 package dev.tfkls.tempus.core;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,14 +14,36 @@ import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Unique;
 
+
 public class DrinkableItem extends Item {
 
     @Unique
     protected DrinkComponent drinkComponent;
+    protected boolean purified;
 
-    public DrinkableItem(Settings settings, DrinkComponent drinkComponent) {
+    public DrinkableItem(Settings settings) {
         super(settings);
-        this.drinkComponent = drinkComponent;
+        this.drinkComponent = settings.drinkComponent;
+        this.purified = settings.purified;
+    }
+
+    public static class Settings extends Item.Settings {
+        DrinkComponent drinkComponent = new DrinkComponent(3);
+        boolean purified = false;
+
+        public Settings() {
+            this.maxCount(16);
+        }
+
+        public Settings drink(DrinkComponent drinkComponent) {
+            this.drinkComponent = drinkComponent;
+            return this;
+        }
+
+        public Settings purified(boolean purified) {
+            this.purified = purified;
+            return this;
+        }
     }
 
     @Override
@@ -32,6 +56,12 @@ public class DrinkableItem extends Item {
             stack.decrement(1);
             player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE));
         }
+        if (!world.isClient() && !this.purified) {
+            if (Math.random()>0.5) {
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 3*20));
+            }
+        }
+
         return stack;
     }
 
