@@ -36,7 +36,13 @@ public class TemperatureManager {
             float oldTemperature = temperature;
 
             DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
+
+            // Player's internal heat regulation
             deltaBuilder.addUninsulatedSource(0, 0.01f);
+            // Seasons come into play
+            deltaBuilder.addSource(SeasonManager.getInstance().ambientTemperature(), 0.02f);
+            // Time of day as well
+            deltaBuilder.addSource((float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
 
             if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 if (player.isSubmergedInWater()) {

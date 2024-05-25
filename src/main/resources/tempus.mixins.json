@@ -3,6 +3,7 @@
   "package": "dev.tfkls.tempus.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BiomeSeasonMixin",
     "CakeNutritionMixin",
     "HungerManagerNutritionMixin",
     "ItemSettingsThirstMixin",
@@ -10,7 +11,9 @@
     "ItemThirstMixin",
     "PlayerEntityTemperatureMixin",
     "PlayerEntityThirstMixin",
-    "PotionItemThirstMixin"
+    "PotionItemThirstMixin",
+    "ServerChunkManagerSeasonMixin",
+    "ServerWorldSeasonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

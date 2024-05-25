@@ -1,10 +1,14 @@
 package dev.tfkls.tempus;
 
 import dev.tfkls.tempus.command.NutritionCommand;
+import dev.tfkls.tempus.command.SeasonCommand;
+import dev.tfkls.tempus.core.SeasonManager;
 import dev.tfkls.tempus.item.Enchantments;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +27,15 @@ public class Tempus implements ModInitializer {
 
 		LOGGER.info("Registering commands...");
 		NutritionCommand.register();
+		SeasonCommand.register();
 
 		LOGGER.info("Registering enchantments...");
 		Enchantments.register();
+
+		LOGGER.info("Registering gamerules...");
+		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
+				GameRuleFactory.createBooleanRule(true, (minecraftServer, value) -> {
+					SeasonManager.getInstance().updateSeasonCycle(value.get());
+				}));
 	}
 }
