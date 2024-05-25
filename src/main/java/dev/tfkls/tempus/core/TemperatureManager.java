@@ -17,7 +17,7 @@ public class TemperatureManager {
     private final int environmentUpdateThreshold = 80;
     protected PlayerStatusEffector effector = PlayerStatusEffector.of(
             (player, heat) -> {
-
+                ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().setThirstTickThreshold(80-2*heat);
             },
             (player, cold) -> {
 

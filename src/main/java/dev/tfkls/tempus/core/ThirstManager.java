@@ -13,6 +13,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class ThirstManager {
     private int thirstLevel = 20;
     private int thirstTickTimer;
+    private int thirstTickThreshold = 80;
     private final PlayerEntity player;
     private boolean sync = true;
 
@@ -30,6 +31,10 @@ public class ThirstManager {
 
     public int getThirst() {
         return thirstLevel;
+    }
+
+    public void setThirstTickThreshold(int threshold) {
+        this.thirstTickThreshold = threshold;
     }
 
     public void add(int val) {
@@ -53,7 +58,7 @@ public class ThirstManager {
             sync = false;
         }
         thirstTickTimer++;
-        if (thirstTickTimer>=80) {
+        if (thirstTickTimer>=thirstTickThreshold) {
 
             if (thirstLevel<=0)
                 player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 1.0f);
