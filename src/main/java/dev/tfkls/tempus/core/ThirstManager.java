@@ -88,9 +88,9 @@ public class ThirstManager {
                 player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 2.0f);
             else {
                 thirstLevel--;
-                sync = true;
                 Tempus.LOGGER.info("Thirst level is {}, tick count: {}",getThirst(),thirstTickTimer);
             }
+            sync = true;
 
             thirstTickTimer=0;
         }

@@ -2,6 +2,7 @@ package dev.tfkls.tempus.core;
 
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -18,10 +19,12 @@ public class TemperatureManager {
     private final int environmentUpdateThreshold = 80;
     protected PlayerStatusEffector effector = PlayerStatusEffector.of(
             (player, heat) -> {
-                ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().setThirstTickThreshold(80-2*heat);
+                if (heat>=6) player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold+10, (heat-6)/6, false, false, false));
+                if (heat>=5) player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold+10, (heat-5)/5, false, false, false));
             },
             (player, cold) -> {
-
+                if (cold>=6) player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, temperatureTickThreshold+10, (cold-6)/6, false, false, false));
+                if (cold>=5) player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold+10, (cold-5)/5, false, false, false));
             }
     );
 
