@@ -1,8 +1,6 @@
 package dev.tfkls.tempus.core;
 
-import dev.tfkls.tempus.Tempus;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
