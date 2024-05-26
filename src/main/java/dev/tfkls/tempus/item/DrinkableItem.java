@@ -1,5 +1,7 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.item;
 
+import dev.tfkls.tempus.core.DrinkComponent;
+import dev.tfkls.tempus.core.ThirstManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -19,7 +21,6 @@ public class DrinkableItem extends Item {
 
     @Unique
     protected DrinkComponent drinkComponent;
-    protected boolean purified;
 
     public DrinkableItem(Settings settings) {
         super(settings);

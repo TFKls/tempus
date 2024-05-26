@@ -3,6 +3,7 @@ package dev.tfkls.tempus;
 import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
 import dev.tfkls.tempus.core.SeasonManager;
+import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import net.fabricmc.api.ModInitializer;
 
@@ -31,6 +32,9 @@ public class Tempus implements ModInitializer {
 
 		LOGGER.info("Registering enchantments...");
 		Enchantments.register();
+
+		LOGGER.info("Registering drinkable items...");
+		DrinkableItems.register();
 
 		LOGGER.info("Registering gamerules...");
 		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
