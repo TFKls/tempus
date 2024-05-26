@@ -2,6 +2,7 @@ package dev.tfkls.tempus;
 
 import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
+import dev.tfkls.tempus.command.TemperatureCommand;
 import dev.tfkls.tempus.core.CustomStatusEffects;
 import dev.tfkls.tempus.core.SeasonManager;
 import dev.tfkls.tempus.init.DrinkFermenterInitializer;
@@ -31,6 +32,7 @@ public class Tempus implements ModInitializer {
 		LOGGER.info("Registering commands...");
 		NutritionCommand.register();
 		SeasonCommand.register();
+		TemperatureCommand.register();
 
 		LOGGER.info("Registering enchantments...");
 		Enchantments.register();
