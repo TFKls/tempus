@@ -17,10 +17,12 @@ import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.EntitySelector;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -56,25 +58,25 @@ public class NutritionCommand implements CommandRegistrationCallback {
                 .requires(source -> source.hasPermissionLevel(2))
                 .then(literal("clear")
                         .executes(context -> executeClear(context.getSource(), List.of(context.getSource().getPlayerOrThrow())))
-                        .then(argument("targets", EntityArgumentType.players()).executes(context -> executeClear(context.getSource(), context.getArgument("targets", Collection.class)))))
+                        .then(argument("targets", EntityArgumentType.players()).executes(context -> executeClear(context.getSource(), context.getArgument("targets", EntitySelector.class).getPlayers(context.getSource())))))
                 .then(literal("query")
                         .executes(context -> executeQuery(context.getSource(), List.of(context.getSource().getPlayerOrThrow())))
-                        .then(argument("targets", EntityArgumentType.players()).executes(context -> executeQuery(context.getSource(), context.getArgument("targets", Collection.class)))))
+                        .then(argument("targets", EntityArgumentType.players()).executes(context -> executeQuery(context.getSource(), context.getArgument("targets", EntitySelector.class).getPlayers(context.getSource())))))
                 .then(literal("set")
                         .then(argument("nutrition", new NutritionArgumentType())
                                 .then(argument("level", IntegerArgumentType.integer(1, 10))
                                         .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", NutritionType.class), context.getArgument("level", Integer.class), List.of(context.getSource().getPlayerOrThrow())))
                                         .then(argument("targets", EntityArgumentType.players())
-                                                .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", NutritionType.class), context.getArgument("level", Integer.class), context.getArgument("targets", Collection.class))))))
+                                                .executes(context -> executeSet(context.getSource(), context.getArgument("nutrition", NutritionType.class), context.getArgument("level", Integer.class), context.getArgument("targets", EntitySelector.class).getPlayers(context.getSource()))))))
                 )
         );
     }
 
-    private static int executeClear(ServerCommandSource source, Collection<PlayerEntity> players) {
+    private static int executeClear(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
         return executeSet(source, NutritionType.NONE, 0, players);
     }
 
-    private static int executeQuery(ServerCommandSource source, Collection<PlayerEntity> players) {
+    private static int executeQuery(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
         for (PlayerEntity player : players) {
             NutritionManager manager = ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager();
             source.sendFeedback(() -> nutritionToText(player.getDisplayName().copy().append("'s nutrition: "), manager.getNutritionType(), manager.getNutritionLevel()), true);
@@ -82,7 +84,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeSet(ServerCommandSource source, NutritionType type, int level, Collection<PlayerEntity> players) {
+    private static int executeSet(ServerCommandSource source, NutritionType type, int level, Collection<ServerPlayerEntity> players) {
         for (PlayerEntity player : players) {
             ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().setState(type, level);
         }
