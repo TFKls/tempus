@@ -17,7 +17,9 @@ public class ThirstManager {
     private int thirstTickTimer;
     private int thirstTickThreshold = 80;
     private final PlayerEntity player;
-    private boolean sync = true;
+    private boolean sync = false;
+    private boolean initialSync = false;
+    private int initialTimer;
     private boolean unpurifiedQueue = false;
 
     public ThirstManager(PlayerEntity player) {
@@ -42,7 +44,7 @@ public class ThirstManager {
 
     public void add(int val) {
         if (player.getWorld().isClient()) return;
-        this.thirstLevel = Math.min(this.thirstLevel+val, 20);
+        this.thirstLevel = Math.max(Math.min(this.thirstLevel+val, 20), 0);
         sync = true;
     }
 
@@ -64,6 +66,10 @@ public class ThirstManager {
 
 
     public void update(PlayerEntity player) {
+        if (!initialSync && this.thirstTickTimer == this.initialTimer+5) {
+            initialSync = true;
+            syncThirst();
+        }
         if (sync) {
             syncThirst();
             sync = false;
@@ -94,6 +100,7 @@ public class ThirstManager {
         if (nbt.contains("thirstLevel", NbtElement.NUMBER_TYPE)) {
             this.thirstLevel = nbt.getInt("thirstLevel");
             this.thirstTickTimer = nbt.getInt("thirstTickTimer");
+            this.initialTimer = this.thirstTickTimer;
         }
     }
 
