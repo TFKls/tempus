@@ -2,6 +2,7 @@ package dev.tfkls.tempus;
 
 import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
+import dev.tfkls.tempus.core.CustomStatusEffects;
 import dev.tfkls.tempus.core.SeasonManager;
 import dev.tfkls.tempus.core.ThirstStatusEffect;
 import dev.tfkls.tempus.item.DrinkableItems;
@@ -24,8 +25,6 @@ public class Tempus implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
 
-	public static final StatusEffect THIRST = new ThirstStatusEffect();
-
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -43,8 +42,8 @@ public class Tempus implements ModInitializer {
 		LOGGER.info("Registering drinkable items...");
 		DrinkableItems.register();
 
-		LOGGER.info("Registering status effects");
-		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "thirst"), THIRST);
+		LOGGER.info("Registering status effects...");
+		CustomStatusEffects.register();
 
 		LOGGER.info("Registering gamerules...");
 		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
