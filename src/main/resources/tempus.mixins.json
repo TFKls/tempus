@@ -9,11 +9,11 @@
     "ItemSettingsThirstMixin",
     "ItemsThirstMixin",
     "ItemThirstMixin",
+    "MinecraftServerSeasonMixin",
     "PlayerEntityTemperatureMixin",
     "PlayerEntityThirstMixin",
     "PotionItemThirstMixin",
-    "ServerChunkManagerSeasonMixin",
-    "ServerWorldSeasonMixin"
+    "ServerChunkManagerSeasonMixin"
   ],
   "injectors": {
     "defaultRequire": 1

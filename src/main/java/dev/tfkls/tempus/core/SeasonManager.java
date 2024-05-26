@@ -1,11 +1,15 @@
 package dev.tfkls.tempus.core;
 
 import dev.tfkls.tempus.util.MathUtil;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.tfkls.tempus.Tempus.LOGGER;
+
 /* TODO:
-    - Add persistence (load data and save data with world)
     - Think about day/night cycle, whether we want to break it a bit in favour of more realism (probably lot of work)
     - Make Biome mixin actually work and snow in the winter
  */
@@ -22,8 +26,7 @@ public class SeasonManager {
     boolean seasonCycle = true;
     long seasonPeriod = 20 * 60 * 20 * 12; // 20min of realtime * 20 ticks * 12 months
 
-    @Nullable
-    World currentWorld = null;
+    MinecraftServer currentServer = null;
     private static final SeasonManager THIS = new SeasonManager();
 
     public static SeasonManager getInstance() {
@@ -39,22 +42,19 @@ public class SeasonManager {
     public long getSeasonPeriod() {
         return seasonPeriod;
     }
-    public World getCurrentWorld() {
-        assert currentWorld != null;
-        return currentWorld;
+    private World getOverworld() {
+        assert currentServer != null;
+        return currentServer.getOverworld();
     }
 
-    /** We only load on overworld, as it's the only dimension where a bed works :))
-     *  We kind of already gave up on intermodal compatibility, so this will need a major refactor
-     *  if we one day decide to support other dimensions.
+    /** We assume only one server instance is loaded at the same time here
+     * This is a safer assumption than the one before (which assumed only one world is loaded, which is false as
+     *  dimensions are separate worlds)
      */
-    public boolean loadWorld(World world) {
-        if (world.isClient() || world == currentWorld || !world.getDimension().bedWorks()) {
-            return false;
-        } else {
-            currentWorld = world;
-            return true;
-        }
+    public void loadServer(MinecraftServer server) {
+        LOGGER.info("Loading server {} into SeasonManager...", server);
+        this.currentServer = server;
+        SeasonServerState.getServerState(server).writeSeasonManager(this);
     }
 
     public void updateSeasonCycle(boolean seasonCycle) {
@@ -68,7 +68,7 @@ public class SeasonManager {
     }
 
     public long currentSeason() {
-        return seasonCycle ? (getCurrentWorld().getTime() + seasonOffset) % seasonPeriod : seasonOffset;
+        return seasonCycle ? (getOverworld().getTime() + seasonOffset) % seasonPeriod : seasonOffset;
     }
 
     private float sineMultiplier() {
@@ -80,7 +80,7 @@ public class SeasonManager {
     }
 
     public float biomeTemperatureDelta() {
-        return (currentWorld == null) ? 0f : Math.min(0.5f, sineMultiplier());
+        return (currentServer == null) ? 0f : Math.min(0.5f, sineMultiplier());
     }
 
     public int modifyTickSpeed(int currentTickSpeed) {
