@@ -12,6 +12,7 @@ import static dev.tfkls.tempus.Tempus.LOGGER;
 public class TemperatureManager {
     protected float temperature = 0;
     protected float insulation = 0;
+    private int coldResistance = 0;
     private int temperatureTickTimer;
     private final int temperatureTickThreshold = 40;
     private final int environmentUpdateThreshold = 80;
@@ -26,6 +27,10 @@ public class TemperatureManager {
 
     public float getTemperature() {
         return temperature;
+    }
+
+    public void setColdResistance(int coldResistance) {
+        this.coldResistance = coldResistance;
     }
 
     public void update(PlayerEntity player) {
@@ -56,7 +61,11 @@ public class TemperatureManager {
 
             deltaBuilder.applyDelta();
             LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature-oldTemperature);
-            effector.runEffect(player, MathUtil.roundUp(temperature));
+            int affectingTemperature = MathUtil.roundUp(temperature);
+            if(affectingTemperature < 0) {
+                affectingTemperature /= (coldResistance + 1);
+            }
+            effector.runEffect(player, affectingTemperature);
         }
     }
 

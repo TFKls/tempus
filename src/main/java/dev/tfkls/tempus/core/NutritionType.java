@@ -51,12 +51,12 @@ public enum NutritionType {
         );
         public static PlayerStatusEffector FAT = PlayerStatusEffector.of(
                 (player, grade) -> {
-                    addNutritionStatusEffect(player,StatusEffects.SATURATION, (grade-1)/3);
-                    addNutritionStatusEffect(player,StatusEffects.SLOW_FALLING, Math.max(grade-3, 0)/3);
+                    addNutritionStatusEffect(player,CustomStatusEffects.COLD_RESISTANCE, (grade-1)/3);
+                    addNutritionStatusEffect(player,StatusEffects.RESISTANCE, Math.max(grade-3, 0)/3);
                 },
                 (player, grade) -> {
                     addNutritionStatusEffect(player,StatusEffects.SLOWNESS, Math.max(grade-2, 0)/3);
-                    addNutritionStatusEffect(player, CustomStatusEffects.THIRST, Math.max(grade-4, 0)/3);
+                    addNutritionStatusEffect(player,CustomStatusEffects.THIRST, Math.max(grade-4, 0)/3);
                 }
         );
         public static PlayerStatusEffector PROTEIN = PlayerStatusEffector.of(

@@ -1,3 +1,5 @@
 {
-  "death.attack.thirst": "%1$s died from thirst!"
+  "death.attack.thirst": "%1$s died from thirst!",
+  "effect.tempus.thirst": "Thirst",
+  "effect.tempus.cold_resistance": "Cold Resistance"
 }
