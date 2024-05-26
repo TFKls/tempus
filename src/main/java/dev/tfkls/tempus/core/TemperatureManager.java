@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,11 +14,12 @@ public class TemperatureManager {
     protected float insulation = 0;
     private int temperatureTickTimer;
     private final int temperatureTickThreshold = 40;
+    private final int environmentUpdateThreshold = 80;
     protected PlayerStatusEffector effector = PlayerStatusEffector.of(
-            (player, temp) -> {
-
+            (player, heat) -> {
+                ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().setThirstTickThreshold(80-2*heat);
             },
-            (player, temp) -> {
+            (player, cold) -> {
 
             }
     );
@@ -25,18 +27,22 @@ public class TemperatureManager {
     public float getTemperature() {
         return temperature;
     }
-    public float getInsulation() {
-        return insulation;
-    }
 
     public void update(PlayerEntity player) {
+        insulation = Enchantments.INSULATION.getInsulationLevel(player)/4;
         temperatureTickTimer++;
         if (temperatureTickTimer >= temperatureTickThreshold) {
             temperatureTickTimer = 0;
             float oldTemperature = temperature;
 
             DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
+
+            // Player's internal heat regulation
             deltaBuilder.addUninsulatedSource(0, 0.01f);
+            // Seasons come into play
+            deltaBuilder.addSource(SeasonManager.getInstance().ambientTemperature(), 0.02f);
+            // Time of day as well
+            deltaBuilder.addSource((float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
 
             if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 if (player.isSubmergedInWater()) {
@@ -83,6 +89,9 @@ public class TemperatureManager {
     }
 
     public void applySingular(float sourceTemperature, float heatConductivity) {
+        temperature += heatConductivity / (1+insulation) * (sourceTemperature - temperature);
+    }
+    public void applyUninsulatedSingular(float sourceTemperature, float heatConductivity) {
         temperature += heatConductivity * (sourceTemperature - temperature);
     }
 
