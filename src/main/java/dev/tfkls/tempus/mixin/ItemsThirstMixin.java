@@ -17,7 +17,7 @@ public abstract class ItemsThirstMixin {
             method = "<clinit>", at = @At(value = "NEW", target = "Lnet/minecraft/item/PotionItem;"))
     private static PotionItem overridePotionItem(Item.Settings settings) {
         Item.Settings newSettings = new Item.Settings().maxCount(1);
-        ((DrinkComponent.MutableMixinAccessor)newSettings).tempus$setDrinkComponent(new DrinkComponent(3));
+        ((DrinkComponent.MutableMixinAccessor)newSettings).tempus$setDrinkComponent(new DrinkComponent(3, true));
         return new PotionItem(newSettings);
     }
 

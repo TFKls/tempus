@@ -4,6 +4,8 @@ import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -16,6 +18,7 @@ public class ThirstManager {
     private int thirstTickThreshold = 80;
     private final PlayerEntity player;
     private boolean sync = true;
+    private boolean unpurifiedQueue = false;
 
     public ThirstManager(PlayerEntity player) {
         this.player = player;
@@ -49,19 +52,34 @@ public class ThirstManager {
     public void drink(DrinkComponent drinkComponent) {
         if (drinkComponent != null) {
             this.add(drinkComponent.getThirst());
+            if (!drinkComponent.isPurified()) {
+                this.unpurifiedRollEffects();
+            }
         }
     }
+
+    public void unpurifiedRollEffects() {
+        unpurifiedQueue = true;
+    }
+
 
     public void update(PlayerEntity player) {
         if (sync) {
             syncThirst();
             sync = false;
         }
+        if (unpurifiedQueue) {
+            if (Math.random() > 0.5) {
+                player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), 4.0f);
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 10*20, 1));
+            }
+            unpurifiedQueue = false;
+        }
         thirstTickTimer++;
         if (thirstTickTimer>=thirstTickThreshold) {
 
             if (thirstLevel<=0)
-                player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 1.0f);
+                player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 2.0f);
             else {
                 thirstLevel--;
                 sync = true;

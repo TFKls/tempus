@@ -19,11 +19,9 @@ public abstract class PotionItemThirstMixin {
     @Inject(method = "finishUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"))
     public void injectFinishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         ((ThirstManager.MixinAccessor)user).tempus$getThirstManager().drink((DrinkComponent.MixinAccessor) this);
-        if (!world.isClient() && !((DrinkComponent.MixinAccessor) this).tempus$getDrinkComponent().isPurified() && stack.getName().getString().equals("Water Bottle")) {
-            if (Math.random()>0.5) {
-                user.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 3*20));
-            }
+        if (!world.isClient() && stack.getName().getString().equals("Water Bottle")) {
+            // Unpurified edge-case
+            ((ThirstManager.MixinAccessor)user).tempus$getThirstManager().unpurifiedRollEffects();
         }
-
     }
 }

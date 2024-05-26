@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "tempus",
-	"version": "${version}",
+	"version": "0.0.0",
 	"name": "Tempus",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [

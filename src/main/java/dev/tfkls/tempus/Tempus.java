@@ -4,6 +4,7 @@ import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
 import dev.tfkls.tempus.core.CustomStatusEffects;
 import dev.tfkls.tempus.core.SeasonManager;
+import dev.tfkls.tempus.init.DrinkFermenterInitializer;
 import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import net.fabricmc.api.ModInitializer;
@@ -35,6 +36,7 @@ public class Tempus implements ModInitializer {
 		Enchantments.register();
 
 		LOGGER.info("Registering drinkable items...");
+		DrinkFermenterInitializer.register();
 		DrinkableItems.register();
 
 		LOGGER.info("Registering status effects...");

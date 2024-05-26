@@ -21,6 +21,8 @@ public class DrinkableItem extends Item {
 
     @Unique
     protected DrinkComponent drinkComponent;
+    @Unique
+    protected ItemStack drinkRemainder = new ItemStack(Items.GLASS_BOTTLE);
 
     public DrinkableItem(Settings settings) {
         super(settings);
@@ -31,7 +33,7 @@ public class DrinkableItem extends Item {
         DrinkComponent drinkComponent = new DrinkComponent(3);
 
         public Settings() {
-            this.maxCount(16);
+            this.maxCount(8);
         }
 
         public Settings drink(DrinkComponent drinkComponent) {
@@ -48,12 +50,10 @@ public class DrinkableItem extends Item {
         ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().drink(drinkComponent);
         if (!player.getAbilities().creativeMode) {
             stack.decrement(1);
-            player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE));
+            player.getInventory().insertStack(drinkRemainder);
         }
         if (!world.isClient() && !this.drinkComponent.isPurified()) {
-            if (Math.random()>0.5) {
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 3*20));
-            }
+            ((ThirstManager.MixinAccessor)player).tempus$getThirstManager().unpurifiedRollEffects();
         }
 
         return stack;

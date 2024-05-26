@@ -18,6 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * TODO: Currently the GUI displays full ThirstBar until first update, should somehow fix this without sending
+ *  too many sync packets.
+ */
+
 @Mixin(InGameHud.class)
 public abstract class InGameHudThirstMixin {
     @Shadow protected abstract PlayerEntity getCameraPlayer();

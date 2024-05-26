@@ -5,6 +5,7 @@
   "mixins": [
     "BiomeSeasonMixin",
     "CakeNutritionMixin",
+    "CookingRecipeJsonBuilderDrinkFermenterMixin",
     "HungerManagerNutritionMixin",
     "ItemSettingsThirstMixin",
     "ItemsThirstMixin",
