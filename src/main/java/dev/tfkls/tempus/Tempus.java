@@ -3,12 +3,17 @@ package dev.tfkls.tempus;
 import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
 import dev.tfkls.tempus.core.SeasonManager;
+import dev.tfkls.tempus.core.ThirstStatusEffect;
 import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +23,8 @@ public class Tempus implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
+
+	public static final StatusEffect THIRST = new ThirstStatusEffect();
 
 	@Override
 	public void onInitialize() {
@@ -35,6 +42,9 @@ public class Tempus implements ModInitializer {
 
 		LOGGER.info("Registering drinkable items...");
 		DrinkableItems.register();
+
+		LOGGER.info("Registering status effects");
+		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "thirst"), THIRST);
 
 		LOGGER.info("Registering gamerules...");
 		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,

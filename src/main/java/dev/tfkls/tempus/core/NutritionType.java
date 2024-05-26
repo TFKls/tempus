@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -56,7 +57,7 @@ public enum NutritionType {
                 },
                 (player, grade) -> {
                     addNutritionStatusEffect(player,StatusEffects.SLOWNESS, Math.max(grade-2, 0)/3);
-                    addNutritionStatusEffect(player,StatusEffects.NAUSEA, Math.max(grade-4, 0)/3);
+                    addNutritionStatusEffect(player, Tempus.THIRST, Math.max(grade-4, 0)/3);
                 }
         );
         public static PlayerStatusEffector PROTEIN = PlayerStatusEffector.of(
