@@ -14,8 +14,9 @@ public abstract class ItemSettingsThirstMixin implements DrinkComponent.MutableM
 	public DrinkComponent drinkComponent = null;
 
 	@Unique
-	public void tempus$setDrinkComponent(DrinkComponent drinkComponent) {
+	public DrinkComponent.MutableMixinAccessor tempus$setDrinkComponent(DrinkComponent drinkComponent) {
 		this.drinkComponent = drinkComponent;
+		return this;
 	}
 
 	@Unique

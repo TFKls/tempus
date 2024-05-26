@@ -24,12 +24,10 @@ public class DrinkableItem extends Item {
     public DrinkableItem(Settings settings) {
         super(settings);
         this.drinkComponent = settings.drinkComponent;
-        this.purified = settings.purified;
     }
 
     public static class Settings extends Item.Settings {
         DrinkComponent drinkComponent = new DrinkComponent(3);
-        boolean purified = false;
 
         public Settings() {
             this.maxCount(16);
@@ -37,11 +35,6 @@ public class DrinkableItem extends Item {
 
         public Settings drink(DrinkComponent drinkComponent) {
             this.drinkComponent = drinkComponent;
-            return this;
-        }
-
-        public Settings purified(boolean purified) {
-            this.purified = purified;
             return this;
         }
     }
@@ -56,7 +49,7 @@ public class DrinkableItem extends Item {
             stack.decrement(1);
             player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE));
         }
-        if (!world.isClient() && !this.purified) {
+        if (!world.isClient() && !this.drinkComponent.isPurified()) {
             if (Math.random()>0.5) {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 3*20));
             }
