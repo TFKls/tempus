@@ -69,7 +69,7 @@ public class TemperatureManager {
                     for (int z = (int)player.getZ()-radius; z <= player.getZ()+radius; z++) {
                         float dist = (float)Math.sqrt(Math.pow(x-player.getX(),2)+Math.pow(y-player.getY(),2)+Math.pow(z-player.getZ(),2));
                         Block block = player.getWorld().getBlockState(new BlockPos(x,y,z)).getBlock();
-                        if (temperatures.containsKey(block)) deltaBuilder.addSource(temperatures.get(block), (float) Math.max(1f - dist / (radius * Math.sqrt(3)), 0)*0.003f);
+                        if (temperatures.containsKey(block)) deltaBuilder.addSource(temperatures.get(block), (float) Math.pow(1f - (dist / (radius * Math.sqrt(3))), 2)*0.006f);
                     }
                 }
             }
