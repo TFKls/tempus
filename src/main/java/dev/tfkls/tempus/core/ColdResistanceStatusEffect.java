@@ -1,6 +1,7 @@
 package dev.tfkls.tempus.core;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,14 +13,16 @@ public class ColdResistanceStatusEffect extends StatusEffect {
 	}
 
 	@Override
-	public boolean canApplyUpdateEffect(int duration, int amplifier) {
-		return true;
+	public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+		if(entity instanceof PlayerEntity player) {
+			((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().setColdResistance(amplifier);
+		}
 	}
 
 	@Override
-	public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+	public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
 		if(entity instanceof PlayerEntity player) {
-			((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().setColdResistance(amplifier);
+			((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().setColdResistance(0);
 		}
 	}
 }
