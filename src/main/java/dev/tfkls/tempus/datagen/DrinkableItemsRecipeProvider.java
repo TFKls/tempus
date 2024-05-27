@@ -1,8 +1,6 @@
 package dev.tfkls.tempus.datagen;
 
-import dev.tfkls.tempus.block.DrinkFermenter;
 import dev.tfkls.tempus.init.DrinkFermenterInitializer;
-import dev.tfkls.tempus.item.DrinkableItem;
 import dev.tfkls.tempus.item.DrinkableItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -10,9 +8,6 @@ import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.RecipeCategory;
 
 import java.util.List;
