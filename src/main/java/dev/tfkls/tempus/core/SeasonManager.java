@@ -14,7 +14,7 @@ import static dev.tfkls.tempus.Tempus.LOGGER;
 
 /**
  * This class is a singleton which manages the seasons for the currently loaded world.
- * Sadly, this behaviour is required, as the Biome classes are not aware of the currenly loaded world,
+ * Sadly, this behaviour is required, as the Biome classes are not aware of the currently loaded world,
  * which makes it hard to implement changes to the Biome temperature (allowing for snow and similar) otherwise.
  */
 

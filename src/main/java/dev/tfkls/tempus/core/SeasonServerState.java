@@ -9,7 +9,7 @@ import net.minecraft.world.PersistentStateManager;
 /**
  * Keeps the data related to the SeasonManager and implements methods to save it to the currently running server.
  * <p> A SeasonManager operates on direct values due to performance reasons (one less layer of indirection).
- * We might move it to a static class of SeasonManager with no data of it's own in the future
+ * We might move it to a static class of SeasonManager with no data of its own in the future
  */
 public class SeasonServerState extends PersistentState {
     long seasonOffset = 0;

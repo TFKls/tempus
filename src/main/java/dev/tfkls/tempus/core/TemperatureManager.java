@@ -1,6 +1,5 @@
 package dev.tfkls.tempus.core;
 
-import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.block.Block;

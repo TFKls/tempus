@@ -13,8 +13,10 @@ public class DrinkableItems {
     public static final DrinkableItem WHEAT_BEER = new DrinkableItem(new DrinkableItem.Settings().drink(new DrinkComponent(8, true)));
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier("tempus", "purified_water_bottle"), PURIFIED_WATER_BOTTLE);
-        Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_extract"), WHEAT_EXTRACT);
-        Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_beer"), WHEAT_BEER);
         Tempus.LOGGER.info("Registered Purified Water Bottle");
+        Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_extract"), WHEAT_EXTRACT);
+        Tempus.LOGGER.info("Registered Wheat Extract");
+        Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_beer"), WHEAT_BEER);
+        Tempus.LOGGER.info("Registered Wheat Beer");
     }
 }
