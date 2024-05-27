@@ -1,12 +1,18 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.HashMap;
 
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
@@ -17,6 +23,7 @@ public class TemperatureManager {
     private int temperatureTickTimer;
     private final int temperatureTickThreshold = 40;
     private final int environmentUpdateThreshold = 80;
+    private final int radius = 5;
     protected PlayerStatusEffector effector = PlayerStatusEffector.of(
             (player, heat) -> {
                 if (heat>=6) player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold+10, (heat-6)/6, false, false, false));
@@ -27,6 +34,13 @@ public class TemperatureManager {
                 if (cold>=5) player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold+10, (cold-5)/5, false, false, false));
             }
     );
+
+    static HashMap<Block,Integer> temperatures = new HashMap<>();
+    static {
+        temperatures.put(Blocks.LAVA,15);
+        temperatures.put(Blocks.END_STONE,-10);
+        temperatures.put(Blocks.NETHERRACK,10);
+    }
 
     public float getTemperature() {
         return temperature;
@@ -59,6 +73,17 @@ public class TemperatureManager {
                     deltaBuilder.addSource(-5, 0.05f);
                 } else if (player.isWet()) {
                     deltaBuilder.addSource(-2, 0.01f);
+                }
+            }
+
+            for (int x = (int)player.getX()-radius; x <= player.getX()+radius; x++) {
+                for (int y = (int)player.getY()-radius; y <= player.getY()+radius; y++) {
+                    for (int z = (int)player.getZ()-radius; z <= player.getZ()+radius; z++) {
+                        float dist = (float)Math.sqrt(Math.pow(x-player.getX(),2)+Math.pow(y-player.getY(),2)+Math.pow(z-player.getZ(),2));
+                        Block block = player.getWorld().getBlockState(new BlockPos(x,y,z)).getBlock();
+                        if (temperatures.containsKey(block)) deltaBuilder.addSource(temperatures.get(block) * (float) Math.max(1f - dist / (radius * Math.sqrt(3)), 0), 0.03f);
+                    }
+
                 }
             }
 
