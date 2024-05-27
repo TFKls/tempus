@@ -21,9 +21,10 @@ public class TemperatureManager {
     protected float insulation = 0;
     private int coldResistance = 0;
     private int temperatureTickTimer;
+    private float cachedDelta = 0;
     private final int temperatureTickThreshold = 40;
     private final int environmentUpdateThreshold = 80;
-    private final int radius = 5;
+    private final int radius = 3;
     protected PlayerStatusEffector effector = PlayerStatusEffector.of(
             (player, heat) -> {
                 if (heat>=6) player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold+10, (heat-6)/6, false, false, false));
@@ -37,9 +38,16 @@ public class TemperatureManager {
 
     static HashMap<Block,Integer> temperatures = new HashMap<>();
     static {
-        temperatures.put(Blocks.LAVA,15);
+        temperatures.put(Blocks.LAVA,25);
         temperatures.put(Blocks.END_STONE,-10);
         temperatures.put(Blocks.NETHERRACK,10);
+        temperatures.put(Blocks.ICE,-15);
+        temperatures.put(Blocks.SNOW,-10);
+        temperatures.put(Blocks.SNOW_BLOCK,-10);
+        temperatures.put(Blocks.WATER,-5);
+        temperatures.put(Blocks.FIRE,15);
+        temperatures.put(Blocks.PACKED_ICE,-15);
+        temperatures.put(Blocks.FROSTED_ICE,-15);
     }
 
     public float getTemperature() {
@@ -53,8 +61,22 @@ public class TemperatureManager {
     public void update(PlayerEntity player) {
         insulation = Enchantments.INSULATION.getInsulationLevel(player)/4;
         temperatureTickTimer++;
-        if (temperatureTickTimer >= temperatureTickThreshold) {
-            temperatureTickTimer = 0;
+        if (temperatureTickTimer%environmentUpdateThreshold == 0) {
+            DeltaBuilder deltaBuilder = new DeltaBuilder(environmentUpdateThreshold);
+
+            for (int x = (int)player.getX()-radius; x <= player.getX()+radius; x++) {
+                for (int y = (int)player.getY()-radius; y <= player.getY()+radius; y++) {
+                    for (int z = (int)player.getZ()-radius; z <= player.getZ()+radius; z++) {
+                        float dist = (float)Math.sqrt(Math.pow(x-player.getX(),2)+Math.pow(y-player.getY(),2)+Math.pow(z-player.getZ(),2));
+                        Block block = player.getWorld().getBlockState(new BlockPos(x,y,z)).getBlock();
+                        if (temperatures.containsKey(block)) deltaBuilder.addSource(temperatures.get(block), (float) Math.max(1f - dist / (radius * Math.sqrt(3)), 0)*0.003f);
+                    }
+                }
+            }
+
+            cachedDelta = deltaBuilder.getDelta();
+        }
+        if (temperatureTickTimer%temperatureTickThreshold == 0) {
             float oldTemperature = temperature;
 
             DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
@@ -65,6 +87,11 @@ public class TemperatureManager {
             deltaBuilder.addSource(SeasonManager.getInstance().ambientTemperature(), 0.02f);
             // Time of day as well
             deltaBuilder.addSource((float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
+            // Height in the world
+            if (player.getY()>=80) deltaBuilder.addSource(-2f-(float)(player.getY()-80)/10, 0.01f);
+            if (player.getY()<=30) deltaBuilder.addSource(2f+(float)(30-player.getY())/10, 0.01f);
+            // And the blocks around
+            deltaBuilder.addDelta(cachedDelta);
 
             if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
                 if (player.isSubmergedInWater()) {
@@ -76,17 +103,6 @@ public class TemperatureManager {
                 }
             }
 
-            for (int x = (int)player.getX()-radius; x <= player.getX()+radius; x++) {
-                for (int y = (int)player.getY()-radius; y <= player.getY()+radius; y++) {
-                    for (int z = (int)player.getZ()-radius; z <= player.getZ()+radius; z++) {
-                        float dist = (float)Math.sqrt(Math.pow(x-player.getX(),2)+Math.pow(y-player.getY(),2)+Math.pow(z-player.getZ(),2));
-                        Block block = player.getWorld().getBlockState(new BlockPos(x,y,z)).getBlock();
-                        if (temperatures.containsKey(block)) deltaBuilder.addSource(temperatures.get(block) * (float) Math.max(1f - dist / (radius * Math.sqrt(3)), 0), 0.03f);
-                    }
-
-                }
-            }
-
             deltaBuilder.applyDelta();
             LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature-oldTemperature);
             float affectingTemperature = temperature;
@@ -95,6 +111,8 @@ public class TemperatureManager {
             }
             effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
         }
+        if (temperatureTickTimer>=environmentUpdateThreshold) temperatureTickTimer = 1;
+
     }
 
     public class DeltaBuilder {
@@ -123,6 +141,10 @@ public class TemperatureManager {
         public void applyDelta() {
             temperature += temperatureDelta*((float) tickCycle/20);
         }
+
+        public float getDelta() { return temperatureDelta; }
+
+        public void addDelta(float delta) { temperatureDelta+=delta; }
     }
 
     public void applySingular(float sourceTemperature, float heatConductivity) {
