@@ -19,18 +19,26 @@ public class VanillaNutritionTagProvider extends FabricTagProvider.ItemTagProvid
                 .add(Items.APPLE)
                 .add(Items.BAKED_POTATO)
                 .add(Items.BEETROOT)
-                .add(Items.BEETROOT_SOUP);
+                .add(Items.BEETROOT_SOUP)
+                .add(Items.BREAD)
+                .add(Items.CARROT)
+                .add(Items.MELON_SLICE)
+                .add(Items.SWEET_BERRIES)
+                .add(Items.HONEY_BOTTLE);
 
         getOrCreateTagBuilder(NutritionType.FAT.tag)
                 .add(Items.COOKIE)
                 .add(Items.MUSHROOM_STEW)
                 .add(Items.PUMPKIN_PIE)
-                .add(Items.BEEF);
+                .add(Items.BEEF)
+                .add(Items.RABBIT_STEW)
+                .add(Items.COOKED_SALMON);
 
         getOrCreateTagBuilder(NutritionType.PROTEIN.tag)
                 .add(Items.COOKED_CHICKEN)
                 .add(Items.COOKED_COD)
                 .add(Items.COOKED_MUTTON)
-                .add(Items.COOKED_PORKCHOP);
+                .add(Items.COOKED_PORKCHOP)
+                .add(Items.COOKED_RABBIT);
     }
 }

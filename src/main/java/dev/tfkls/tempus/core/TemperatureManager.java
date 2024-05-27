@@ -64,11 +64,11 @@ public class TemperatureManager {
 
             deltaBuilder.applyDelta();
             LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature-oldTemperature);
-            int affectingTemperature = MathUtil.roundUp(temperature);
+            float affectingTemperature = temperature;
             if(affectingTemperature < 0) {
-                affectingTemperature /= (coldResistance + 1);
+                affectingTemperature /= ((float)coldResistance/2 + 1);
             }
-            effector.runEffect(player, affectingTemperature);
+            effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
         }
     }
 
