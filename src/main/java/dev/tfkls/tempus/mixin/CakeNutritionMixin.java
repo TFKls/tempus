@@ -19,5 +19,6 @@ public abstract class CakeNutritionMixin {
 	@Inject(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getHungerManager()Lnet/minecraft/entity/player/HungerManager;"))
 	private static void injectCakeNutritionType(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player, CallbackInfoReturnable<ActionResult> cir) {
 		((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().add(NutritionType.CARBOHYDRATE);
+		((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().syncNutrition(player);
 	}
 }

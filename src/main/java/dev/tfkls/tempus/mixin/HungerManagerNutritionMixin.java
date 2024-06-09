@@ -25,6 +25,7 @@ public abstract class HungerManagerNutritionMixin implements NutritionManager.Mi
 	@Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/HungerManager;add(IF)V"))
 	private void injectFoodNutritionType(Item item, ItemStack stack, CallbackInfo ci) {
 		nutritionManager.add(item);
+		if (stack.getHolder() instanceof PlayerEntity player) nutritionManager.syncNutrition(player);
 	}
 
 	@Inject(method = "readNbt", at = @At(value = "TAIL"))

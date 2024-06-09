@@ -1,13 +1,18 @@
 package dev.tfkls.tempus.core;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.networking.ServerEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
@@ -25,6 +30,16 @@ public class NutritionManager {
 
 	public NutritionType getNutritionType() {
 		return nutritionType;
+	}
+
+	public void syncNutrition(PlayerEntity pl) {
+		if (pl instanceof ServerPlayerEntity player) {
+			PacketByteBuf buffer = PacketByteBufs.create();
+			NbtCompound nbt = new NbtCompound();
+			writeNbt(nbt);
+			buffer.writeNbt(nbt);
+			ServerPlayNetworking.send(player, ServerEvents.NUTRITION, buffer);
+		}
 	}
 
 	public void update(PlayerEntity player) {

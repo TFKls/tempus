@@ -19,14 +19,15 @@ public class ThirstManager {
 	private final int thirstTickThreshold = Tempus.config.thirstTickThreshold;
 	private boolean unpurifiedQueue = false;
 
-	public void syncThirst(PlayerEntity pl) {
-		if (pl instanceof ServerPlayerEntity player) {
-			PacketByteBuf buffer = PacketByteBufs.create();
-			buffer.writeInt(thirstLevel);
-			buffer.writeInt(thirstTickTimer);
-			ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
-		}
-	}
+    public void syncThirst(PlayerEntity pl) {
+        if (pl instanceof ServerPlayerEntity player) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            NbtCompound nbt = new NbtCompound();
+            writeNbt(nbt);
+            buffer.writeNbt(nbt);
+            ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
+        }
+    }
 
 	public int getThirst() {
 		return thirstLevel;
