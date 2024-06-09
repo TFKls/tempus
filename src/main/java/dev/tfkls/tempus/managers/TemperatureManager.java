@@ -31,7 +31,7 @@ public class TemperatureManager {
 				player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.HEAT, temperatureTickThreshold + 10, heat, false, false, false));
 			},
 			(player, cold) -> {
-				player.addStatusEffect(new StatusEffectInstance(StatusEffects.COLD, temperatureTickThreshold + 10, cold, false, false, false));
+				player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.COLD, temperatureTickThreshold + 10, cold, false, false, false));
 			}
 	);
 
