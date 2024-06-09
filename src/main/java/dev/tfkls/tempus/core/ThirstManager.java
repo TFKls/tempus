@@ -60,6 +60,10 @@ public class ThirstManager {
         }
     }
 
+    public boolean canDrink() {
+        return player.getAbilities().invulnerable || thirstLevel < 20;
+    }
+
     public void unpurifiedRollEffects() {
         unpurifiedQueue = true;
     }
