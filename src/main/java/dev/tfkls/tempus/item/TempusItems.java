@@ -7,10 +7,10 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class TempusItems {
-    public static final ThermometerItem THERMOMETER = new ThermometerItem(new Item.Settings().maxCount(1).maxDamage(64));
+	public static final ThermometerItem THERMOMETER = new ThermometerItem(new Item.Settings().maxCount(1).maxDamage(64));
 
-    public static void register() {
-        Registry.register(Registries.ITEM, new Identifier("tempus", "thermometer"), THERMOMETER);
-        Tempus.LOGGER.info("Registered thermometer");
-    }
+	public static void register() {
+		Registry.register(Registries.ITEM, new Identifier("tempus", "thermometer"), THERMOMETER);
+		Tempus.LOGGER.info("Registered thermometer");
+	}
 }

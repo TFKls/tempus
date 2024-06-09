@@ -16,15 +16,15 @@ import java.util.function.Consumer;
 import static net.minecraft.item.Items.*;
 
 public class DrinkableItemsRecipeProvider extends FabricRecipeProvider {
-    public DrinkableItemsRecipeProvider(FabricDataOutput output) {
-        super(output);
-    }
+	public DrinkableItemsRecipeProvider(FabricDataOutput output) {
+		super(output);
+	}
 
-    @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
-        RecipeProvider.offerSmelting(exporter, List.of(Items.POTION), RecipeCategory.FOOD, DrinkableItems.PURIFIED_WATER_BOTTLE, 0.1f, 200, "tempus");
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WHEAT_EXTRACT, 1).input(DrinkableItems.PURIFIED_WATER_BOTTLE).input(WHEAT, 2).input(RED_MUSHROOM).criterion(RecipeProvider.hasItem(DrinkableItems.PURIFIED_WATER_BOTTLE), RecipeProvider.conditionsFromItem(DrinkableItems.PURIFIED_WATER_BOTTLE)).offerTo(exporter, RecipeProvider.getItemPath(DrinkableItems.WHEAT_EXTRACT) + "_from_red_mushroom");
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WHEAT_EXTRACT, 1).input(DrinkableItems.PURIFIED_WATER_BOTTLE).input(WHEAT, 2).input(BROWN_MUSHROOM).criterion(hasItem(DrinkableItems.PURIFIED_WATER_BOTTLE), RecipeProvider.conditionsFromItem(DrinkableItems.PURIFIED_WATER_BOTTLE)).offerTo(exporter, RecipeProvider.getItemPath(DrinkableItems.WHEAT_EXTRACT) + "_from_brown_mushroom");
-        DrinkFermenterInitializer.offerRecipe(exporter, DrinkableItems.WHEAT_EXTRACT, Items.COAL, DrinkableItems.WHEAT_BEER);
-    }
+	@Override
+	public void generate(Consumer<RecipeJsonProvider> exporter) {
+		RecipeProvider.offerSmelting(exporter, List.of(Items.POTION), RecipeCategory.FOOD, DrinkableItems.PURIFIED_WATER_BOTTLE, 0.1f, 200, "tempus");
+		ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WHEAT_EXTRACT, 1).input(DrinkableItems.PURIFIED_WATER_BOTTLE).input(WHEAT, 2).input(RED_MUSHROOM).criterion(RecipeProvider.hasItem(DrinkableItems.PURIFIED_WATER_BOTTLE), RecipeProvider.conditionsFromItem(DrinkableItems.PURIFIED_WATER_BOTTLE)).offerTo(exporter, RecipeProvider.getItemPath(DrinkableItems.WHEAT_EXTRACT) + "_from_red_mushroom");
+		ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WHEAT_EXTRACT, 1).input(DrinkableItems.PURIFIED_WATER_BOTTLE).input(WHEAT, 2).input(BROWN_MUSHROOM).criterion(hasItem(DrinkableItems.PURIFIED_WATER_BOTTLE), RecipeProvider.conditionsFromItem(DrinkableItems.PURIFIED_WATER_BOTTLE)).offerTo(exporter, RecipeProvider.getItemPath(DrinkableItems.WHEAT_EXTRACT) + "_from_brown_mushroom");
+		DrinkFermenterInitializer.offerRecipe(exporter, DrinkableItems.WHEAT_EXTRACT, Items.COAL, DrinkableItems.WHEAT_BEER);
+	}
 }

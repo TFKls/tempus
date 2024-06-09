@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(CookingRecipeJsonBuilder.class)
 public abstract class CookingRecipeJsonBuilderDrinkFermenterMixin {
-    @Inject(method = "getCookingRecipeCategory", at = @At(value = "HEAD"), cancellable = true)
-    private static void appendFermenterCookingType(RecipeSerializer<? extends AbstractCookingRecipe> serializer, ItemConvertible output, CallbackInfoReturnable<CookingRecipeCategory> cir) {
-        if (serializer == DrinkFermenterInitializer.RECIPE_SERIALIZER) {
-            cir.setReturnValue(CookingRecipeCategory.FOOD);
-        }
-    }
+	@Inject(method = "getCookingRecipeCategory", at = @At(value = "HEAD"), cancellable = true)
+	private static void appendFermenterCookingType(RecipeSerializer<? extends AbstractCookingRecipe> serializer, ItemConvertible output, CallbackInfoReturnable<CookingRecipeCategory> cir) {
+		if (serializer == DrinkFermenterInitializer.RECIPE_SERIALIZER) {
+			cir.setReturnValue(CookingRecipeCategory.FOOD);
+		}
+	}
 }

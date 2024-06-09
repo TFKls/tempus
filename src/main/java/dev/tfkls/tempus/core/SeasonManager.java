@@ -19,68 +19,72 @@ import static dev.tfkls.tempus.Tempus.LOGGER;
  */
 
 public class SeasonManager {
-    long seasonOffset = 0;
-    boolean seasonCycle = true;
-    long seasonPeriod = 20 * 60 * 20 * 12; // 20min of realtime * 20 ticks * 12 months
+	long seasonOffset = 0;
+	boolean seasonCycle = true;
+	long seasonPeriod = 20 * 60 * 20 * 12; // 20min of realtime * 20 ticks * 12 months
 
-    MinecraftServer currentServer = null;
-    private static final SeasonManager THIS = new SeasonManager();
+	MinecraftServer currentServer = null;
+	private static final SeasonManager THIS = new SeasonManager();
 
-    public static SeasonManager getInstance() {
-        return THIS;
-    }
+	public static SeasonManager getInstance() {
+		return THIS;
+	}
 
-    public long getSeasonOffset() {
-        return seasonOffset;
-    }
-    public void setSeasonOffset(long seasonOffset) {
-        this.seasonOffset = (seasonOffset + seasonPeriod) % seasonPeriod;
-    }
-    public long getSeasonPeriod() {
-        return seasonPeriod;
-    }
-    private World getOverworld() {
-        assert currentServer != null;
-        return currentServer.getOverworld();
-    }
+	public long getSeasonOffset() {
+		return seasonOffset;
+	}
 
-    /** We assume only one server instance is loaded at the same time here
-     * This is a safer assumption than the one before (which assumed only one world is loaded, which is false as
-     *  dimensions are separate worlds)
-     */
-    public void loadServer(MinecraftServer server) {
-        LOGGER.info("Loading server {} into SeasonManager...", server);
-        this.currentServer = server;
-        SeasonServerState.getServerState(server).writeSeasonManager(this);
-    }
+	public void setSeasonOffset(long seasonOffset) {
+		this.seasonOffset = (seasonOffset + seasonPeriod) % seasonPeriod;
+	}
 
-    public void updateSeasonCycle(boolean seasonCycle) {
-        if (seasonCycle && !this.seasonCycle) {
-            this.seasonCycle = true;
-            setSeasonOffset(seasonOffset - (currentSeason() - seasonOffset));
-        } else if (!seasonCycle && this.seasonCycle) {
-            seasonOffset = currentSeason();
-            this.seasonCycle = false;
-        }
-    }
+	public long getSeasonPeriod() {
+		return seasonPeriod;
+	}
 
-    public long currentSeason() {
-        return seasonCycle ? (getOverworld().getTime() + seasonOffset) % seasonPeriod : seasonOffset;
-    }
+	private World getOverworld() {
+		assert currentServer != null;
+		return currentServer.getOverworld();
+	}
 
-    private float sineMultiplier() {
-        return (float) Math.sin((float) currentSeason() / seasonPeriod * (2*Math.PI));
-    }
+	/**
+	 * We assume only one server instance is loaded at the same time here
+	 * This is a safer assumption than the one before (which assumed only one world is loaded, which is false as
+	 * dimensions are separate worlds)
+	 */
+	public void loadServer(MinecraftServer server) {
+		LOGGER.info("Loading server {} into SeasonManager...", server);
+		this.currentServer = server;
+		SeasonServerState.getServerState(server).writeSeasonManager(this);
+	}
 
-    public float ambientTemperature() {
-        return 3.0f*sineMultiplier();
-    }
+	public void updateSeasonCycle(boolean seasonCycle) {
+		if (seasonCycle && !this.seasonCycle) {
+			this.seasonCycle = true;
+			setSeasonOffset(seasonOffset - (currentSeason() - seasonOffset));
+		} else if (!seasonCycle && this.seasonCycle) {
+			seasonOffset = currentSeason();
+			this.seasonCycle = false;
+		}
+	}
 
-    public float biomeTemperatureDelta() {
-        return (currentServer == null) ? 0f : Math.min(0.5f, sineMultiplier());
-    }
+	public long currentSeason() {
+		return seasonCycle ? (getOverworld().getTime() + seasonOffset) % seasonPeriod : seasonOffset;
+	}
 
-    public int modifyTickSpeed(int currentTickSpeed) {
-        return currentTickSpeed + MathUtil.roundDown(0.8f * sineMultiplier() * currentTickSpeed);
-    }
+	private float sineMultiplier() {
+		return (float) Math.sin((float) currentSeason() / seasonPeriod * (2 * Math.PI));
+	}
+
+	public float ambientTemperature() {
+		return 3.0f * sineMultiplier();
+	}
+
+	public float biomeTemperatureDelta() {
+		return (currentServer == null) ? 0f : Math.min(0.5f, sineMultiplier());
+	}
+
+	public int modifyTickSpeed(int currentTickSpeed) {
+		return currentTickSpeed + MathUtil.roundDown(0.8f * sineMultiplier() * currentTickSpeed);
+	}
 }

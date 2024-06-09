@@ -10,7 +10,6 @@ import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.item.TempusItems;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.world.GameRules;
@@ -21,7 +20,7 @@ public class Tempus implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
-    public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
+	public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
 
 	@Override
 	public void onInitialize() {

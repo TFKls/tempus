@@ -5,7 +5,7 @@ import dev.tfkls.tempus.networking.packet.client.ThirstS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class PacketProvider {
-    public static void registerS2CPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(Packets.THIRST, ThirstS2CPacket::receive);
-    }
+	public static void registerS2CPackets() {
+		ClientPlayNetworking.registerGlobalReceiver(Packets.THIRST, ThirstS2CPacket::receive);
+	}
 }

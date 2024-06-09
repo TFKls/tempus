@@ -1,7 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
 import dev.tfkls.tempus.core.DrinkComponent;
-import dev.tfkls.tempus.core.ThirstManager;
 import net.minecraft.item.Item;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

@@ -14,15 +14,15 @@ public class ColdResistanceStatusEffect extends StatusEffect {
 
 	@Override
 	public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		if(entity instanceof PlayerEntity player) {
-			((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().setColdResistance(amplifier);
+		if (entity instanceof PlayerEntity player) {
+			((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager().setColdResistance(amplifier);
 		}
 	}
 
 	@Override
 	public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		if(entity instanceof PlayerEntity player) {
-			((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().setColdResistance(0);
+		if (entity instanceof PlayerEntity player) {
+			((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager().setColdResistance(0);
 		}
 	}
 }

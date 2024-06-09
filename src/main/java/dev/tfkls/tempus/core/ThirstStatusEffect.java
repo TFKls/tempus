@@ -6,8 +6,8 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class ThirstStatusEffect extends StatusEffect {
-	private int tickCounter=0;
-	private final int threshold=100;
+	private int tickCounter = 0;
+	private final int threshold = 100;
 
 	public ThirstStatusEffect() {
 		super(StatusEffectCategory.HARMFUL, 0x98D982);
@@ -16,8 +16,8 @@ public class ThirstStatusEffect extends StatusEffect {
 	@Override
 	public boolean canApplyUpdateEffect(int duration, int amplifier) {
 		tickCounter++;
-		if(tickCounter*amplifier>=threshold) {
-			tickCounter=0;
+		if (tickCounter * amplifier >= threshold) {
+			tickCounter = 0;
 			return true;
 		}
 		return false;
@@ -25,13 +25,12 @@ public class ThirstStatusEffect extends StatusEffect {
 
 	@Override
 	public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-		if(entity instanceof PlayerEntity player) {
-			ThirstManager thirstManager=((ThirstManager.MixinAccessor)player).tempus$getThirstManager();
-			if(thirstManager.getThirst()>0) {
+		if (entity instanceof PlayerEntity player) {
+			ThirstManager thirstManager = ((ThirstManager.MixinAccessor) player).tempus$getThirstManager();
+			if (thirstManager.getThirst() > 0) {
 				thirstManager.add(-1);
-			}
-			else {
-				player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 1.0f);
+			} else {
+				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), 1.0f);
 			}
 		}
 	}

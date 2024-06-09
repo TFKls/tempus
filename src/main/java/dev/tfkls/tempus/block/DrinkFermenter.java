@@ -12,20 +12,20 @@ import org.jetbrains.annotations.Nullable;
 
 public class DrinkFermenter extends AbstractFurnaceBlock {
 
-    public DrinkFermenter(Settings settings) {
-        super(settings);
-    }
+	public DrinkFermenter(Settings settings) {
+		super(settings);
+	}
 
-    @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new DrinkFermenterEntity(pos, state);
-    }
+	@Override
+	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new DrinkFermenterEntity(pos, state);
+	}
 
-    @Override
-    protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DrinkFermenterEntity) {
-            player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
-        }
-    }
+	@Override
+	protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof DrinkFermenterEntity) {
+			player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
+		}
+	}
 }
