@@ -5,10 +5,12 @@ import dev.tfkls.tempus.effects.CustomStatusEffects;
 import dev.tfkls.tempus.effects.PlayerStatusEffector;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.networking.ServerEvents;
+import dev.tfkls.tempus.misc.CustomDamageSources;
 import dev.tfkls.tempus.util.MathUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,11 +33,65 @@ public class TemperatureManager {
 	private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
 	private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
 	private final int radius = Tempus.config.radius;
-	private final int temperatureEffectDuration = Tempus.config.temperatureEffectDuration;
-	protected PlayerStatusEffector effector = PlayerStatusEffector.of(
-			(player, heat) -> player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.HEAT, temperatureEffectDuration, heat, false, false, false)),
-			(player, cold) -> player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.COLD, temperatureEffectDuration, cold, false, false, false))
-	);
+    protected PlayerStatusEffector effector = PlayerStatusEffector.of(
+            (player, heat) -> {
+                if (MathUtil.shiftedUniformRandom(15, 20, heat)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_HEAT), (float)
+                            (heat * Math.random()));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 20, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.MINING_FATIGUE, temperatureTickThreshold + 2, 0, true, true, false));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 15, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+						StatusEffects.NAUSEA,
+							temperatureTickThreshold/2,
+							0,
+							true,
+							true,
+							false
+					));
+                }
+                if (MathUtil.shiftedUniformRandom(5, 15, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+							StatusEffects.GLOWING,
+							2*temperatureTickThreshold,
+							0,
+							true,
+							true,
+							false
+					));
+                }
+                player.getActiveStatusEffects().remove(CustomStatusEffects.THIRST);
+                if (heat >= 5) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            CustomStatusEffects.THIRST,
+                            2 * temperatureTickThreshold,
+                            (heat - 5) / 5,
+                            false,
+                            false,
+                            false));
+                }
+            },
+            (player, cold) -> {
+                if (MathUtil.shiftedUniformRandom(15, 20, cold)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
+                            (cold * Math.random()));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 20, cold)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
+                            (2f * (Math.random())));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 15, cold)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.SLOWNESS, temperatureTickThreshold + 2, (cold - 10) / 5, true, true, false));
+                }
+                if (MathUtil.shiftedUniformRandom(5, 15, cold)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.WEAKNESS, temperatureTickThreshold + 2, (cold - 5) / 5, true, true, false));
+                }
+            });
 
 	static HashMap<Block, Integer> temperatures = Tempus.config.blockTemperatures;
 

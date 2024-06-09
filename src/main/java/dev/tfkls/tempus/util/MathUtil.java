@@ -9,4 +9,7 @@ public class MathUtil {
 		return (int) (Math.signum(f) * Math.floor(Math.abs(f)));
 	}
 
+	public static boolean shiftedUniformRandom(int low, int high, int val) {
+		return val > (low + (Math.random() * (high - low)));
+	}
 }

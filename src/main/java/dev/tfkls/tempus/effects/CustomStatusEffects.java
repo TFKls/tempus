@@ -10,8 +10,6 @@ public class CustomStatusEffects {
 
 	public static final StatusEffect THIRST = new ThirstStatusEffect();
 	public static final StatusEffect COLD_RESISTANCE = new ColdResistanceStatusEffect();
-	public static final StatusEffect HEAT = new HeatStatusEffect();
-	public static final StatusEffect COLD = new ColdStatusEffect();
 
 	public static final StatusEffect TIPSY = new TipsyStatusEffect();
 
@@ -22,12 +20,6 @@ public class CustomStatusEffects {
 
 		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "cold_resistance"), COLD_RESISTANCE);
 		Tempus.LOGGER.info("Registered Cold Resistance Status Effect");
-
-		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "heat"), HEAT);
-		Tempus.LOGGER.info("Registered Heat Status Effect");
-
-		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "cold"), COLD);
-		Tempus.LOGGER.info("Registered Cold Status Effect");
 
 		Registry.register(Registries.STATUS_EFFECT, new Identifier("tempus", "tipsy"), TIPSY);
 		Tempus.LOGGER.info("Registered Tipsy Status Effect");
