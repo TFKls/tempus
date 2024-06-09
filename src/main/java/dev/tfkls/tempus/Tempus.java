@@ -3,6 +3,7 @@ package dev.tfkls.tempus;
 import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
 import dev.tfkls.tempus.command.TemperatureCommand;
+import dev.tfkls.tempus.config.TempusConfig;
 import dev.tfkls.tempus.core.CustomStatusEffects;
 import dev.tfkls.tempus.core.SeasonManager;
 import dev.tfkls.tempus.init.DrinkFermenterInitializer;
@@ -21,6 +22,7 @@ public class Tempus implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
+	public static TempusConfig config;
 
 	@Override
 	public void onInitialize() {
@@ -28,6 +30,9 @@ public class Tempus implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		LOGGER.info("Hello Fabric world!");
+
+		LOGGER.info("Loading config...");
+		config = TempusConfig.load();
 
 		LOGGER.info("Registering commands...");
 		NutritionCommand.register();
@@ -44,6 +49,9 @@ public class Tempus implements ModInitializer {
 
 		LOGGER.info("Registering status effects...");
 		CustomStatusEffects.register();
+
+		LOGGER.info("Saving config...");
+		config.save();
 
 		LOGGER.info("Registering gamerules...");
 		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
