@@ -1,6 +1,8 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.effects;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.managers.ThirstManager;
+import dev.tfkls.tempus.misc.CustomDamageSources;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -28,11 +30,10 @@ public class ThirstStatusEffect extends StatusEffect {
 	public void applyUpdateEffect(LivingEntity entity, int amplifier) {
 		if (entity instanceof PlayerEntity player) {
 			ThirstManager thirstManager = ((ThirstManager.MixinAccessor) player).tempus$getThirstManager();
-			if (thirstManager.getThirst() > 0) {
+			if (thirstManager.getThirst() > 0)
 				thirstManager.add(-1);
-			} else {
-				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), 1.0f);
-			}
+			else
+				player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.THIRST), 1.0f);
 		}
 	}
 }

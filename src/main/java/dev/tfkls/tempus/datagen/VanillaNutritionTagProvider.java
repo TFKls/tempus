@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.datagen;
 
-import dev.tfkls.tempus.core.NutritionType;
+import dev.tfkls.tempus.misc.NutritionType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.item.Items;

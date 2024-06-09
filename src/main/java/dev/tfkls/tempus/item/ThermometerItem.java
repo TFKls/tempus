@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.item;
 
-import dev.tfkls.tempus.core.TemperatureManager;
+import dev.tfkls.tempus.managers.TemperatureManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

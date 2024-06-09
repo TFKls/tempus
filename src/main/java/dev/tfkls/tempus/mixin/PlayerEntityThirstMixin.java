@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
-import dev.tfkls.tempus.core.ThirstManager;
+import dev.tfkls.tempus.managers.ThirstManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,8 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.managers;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.misc.CustomDamageSources;
+import dev.tfkls.tempus.misc.DrinkComponent;
 import dev.tfkls.tempus.networking.ServerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,15 +21,15 @@ public class ThirstManager {
 	private final int thirstTickThreshold = Tempus.config.thirstTickThreshold;
 	private boolean unpurifiedQueue = false;
 
-    public void syncThirst(PlayerEntity pl) {
-        if (pl instanceof ServerPlayerEntity player) {
-            PacketByteBuf buffer = PacketByteBufs.create();
-            NbtCompound nbt = new NbtCompound();
-            writeNbt(nbt);
-            buffer.writeNbt(nbt);
-            ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
-        }
-    }
+	public void syncThirst(PlayerEntity pl) {
+		if (pl instanceof ServerPlayerEntity player) {
+			PacketByteBuf buffer = PacketByteBufs.create();
+			NbtCompound nbt = new NbtCompound();
+			writeNbt(nbt);
+			buffer.writeNbt(nbt);
+			ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
+		}
+	}
 
 	public int getThirst() {
 		return thirstLevel;
@@ -62,7 +64,7 @@ public class ThirstManager {
 	public void update(PlayerEntity player) {
 		if (unpurifiedQueue) {
 			if (Math.random() > 0.5) {
-				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), Tempus.config.unpurifiedDamageAmount);
+				player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.THIRST), Tempus.config.unpurifiedDamageAmount);
 				player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, Tempus.config.unpurifiedHungerStatusDuration, Tempus.config.unpurifiedHungerStatusAmplifier));
 			}
 			unpurifiedQueue = false;
@@ -71,7 +73,7 @@ public class ThirstManager {
 		if (thirstTickTimer >= thirstTickThreshold) {
 
 			if (thirstLevel <= 0)
-				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), Tempus.config.thirstDamageAmount);
+				player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.THIRST), Tempus.config.thirstDamageAmount);
 			else {
 				thirstLevel--;
 				Tempus.LOGGER.info("Thirst level is {}, tick count: {}", getThirst(), thirstTickTimer);

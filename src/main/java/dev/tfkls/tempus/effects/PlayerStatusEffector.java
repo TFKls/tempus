@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.effects;
 
 import net.minecraft.entity.player.PlayerEntity;
 

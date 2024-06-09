@@ -1,7 +1,7 @@
 package dev.tfkls.tempus.item;
 
 import dev.tfkls.tempus.Tempus;
-import dev.tfkls.tempus.core.DrinkComponent;
+import dev.tfkls.tempus.misc.DrinkComponent;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;

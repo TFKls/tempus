@@ -31,8 +31,6 @@ public class TempusConfig {
 	public int temperatureTickThreshold = 40;
 	public int environmentUpdateThreshold = 80;
 	public int radius = 3;
-	public int higherAffectingTemperature = 6;
-	public int lowerAffectingTemperature = 5;
 	public int lowTemperatureHeight = 80;
 	public int highTemperatureHeight = 30;
 	public int inWaterSourceTemperature = -10;

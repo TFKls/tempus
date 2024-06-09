@@ -1,6 +1,8 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.managers;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effects.PlayerStatusEffector;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.block.Block;
@@ -24,20 +26,12 @@ public class TemperatureManager {
 	private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
 	private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
 	private final int radius = Tempus.config.radius;
-	private final int higherAffectingTemperature = Tempus.config.higherAffectingTemperature;
-	private final int lowerAffectingTemperature = Tempus.config.lowerAffectingTemperature;
 	protected PlayerStatusEffector effector = PlayerStatusEffector.of(
 			(player, heat) -> {
-				if (heat >= higherAffectingTemperature)
-					player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold + 10, (heat - higherAffectingTemperature) / higherAffectingTemperature, false, false, false));
-				if (heat >= lowerAffectingTemperature)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (heat - lowerAffectingTemperature) / lowerAffectingTemperature, false, false, false));
+				player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.HEAT, temperatureTickThreshold + 10, heat, false, false, false));
 			},
 			(player, cold) -> {
-				if (cold >= higherAffectingTemperature)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, temperatureTickThreshold + 10, (cold - higherAffectingTemperature) / higherAffectingTemperature, false, false, false));
-				if (cold >= lowerAffectingTemperature)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (cold - lowerAffectingTemperature) / lowerAffectingTemperature, false, false, false));
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.COLD, temperatureTickThreshold + 10, cold, false, false, false));
 			}
 	);
 

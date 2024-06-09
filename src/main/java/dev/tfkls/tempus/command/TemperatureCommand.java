@@ -3,7 +3,7 @@ package dev.tfkls.tempus.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
-import dev.tfkls.tempus.core.TemperatureManager;
+import dev.tfkls.tempus.managers.TemperatureManager;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.EntitySelector;

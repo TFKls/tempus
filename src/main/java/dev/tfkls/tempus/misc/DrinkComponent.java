@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.misc;
 
 public class DrinkComponent {
 	private final int thirst;

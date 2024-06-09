@@ -1,6 +1,8 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.misc;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effects.PlayerStatusEffector;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;

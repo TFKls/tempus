@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.networking.packet.client;
 
-import dev.tfkls.tempus.core.NutritionManager;
+import dev.tfkls.tempus.managers.NutritionManager;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

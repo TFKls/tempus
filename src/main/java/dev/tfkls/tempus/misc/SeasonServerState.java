@@ -1,6 +1,7 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.misc;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.managers.SeasonManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;

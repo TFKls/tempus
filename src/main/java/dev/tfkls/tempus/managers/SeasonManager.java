@@ -1,6 +1,7 @@
-package dev.tfkls.tempus.core;
+package dev.tfkls.tempus.managers;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.misc.SeasonServerState;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;

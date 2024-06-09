@@ -1,7 +1,7 @@
 package dev.tfkls.tempus.mixin;
 
-import dev.tfkls.tempus.core.NutritionManager;
-import dev.tfkls.tempus.core.NutritionType;
+import dev.tfkls.tempus.managers.NutritionManager;
+import dev.tfkls.tempus.misc.NutritionType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.entity.player.PlayerEntity;
