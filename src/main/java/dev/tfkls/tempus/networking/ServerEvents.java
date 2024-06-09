@@ -6,15 +6,15 @@ import net.minecraft.util.Identifier;
 
 public class ServerEvents {
 
-    public static final Identifier THIRST = new Identifier("tempus", "thirst");
+	public static final Identifier THIRST = new Identifier("tempus", "thirst");
 
-    public static void registerServerEvents() {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            ThirstManager manager = ((ThirstManager.MixinAccessor)handler.getPlayer()).tempus$getThirstManager();
+	public static void registerServerEvents() {
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ThirstManager manager = ((ThirstManager.MixinAccessor) handler.getPlayer()).tempus$getThirstManager();
 
-            server.execute(() -> {
-                manager.syncThirst(handler.getPlayer());
-            });
-        });
-    }
+			server.execute(() -> {
+				manager.syncThirst(handler.getPlayer());
+			});
+		});
+	}
 }

@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -7,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class ThirstStatusEffect extends StatusEffect {
 	private int tickCounter = 0;
-	private final int threshold = 100;
+	private final int threshold = Tempus.config.thirstStatusEffectThreshold;
 
 	public ThirstStatusEffect() {
 		super(StatusEffectCategory.HARMFUL, 0x98D982);

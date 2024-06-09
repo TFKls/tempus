@@ -13,27 +13,28 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ThirstManager {
-    private int thirstLevel = 20;
-    private int thirstTickTimer;
-    private int thirstTickThreshold = 80;
-    private boolean unpurifiedQueue = false;
+	private int thirstLevel = Tempus.config.thirstLevelMax;
+	private final int thirstLevelMax = Tempus.config.thirstLevelMax;
+	private int thirstTickTimer;
+	private final int thirstTickThreshold = Tempus.config.thirstTickThreshold;
+	private boolean unpurifiedQueue = false;
 
-    public void syncThirst(PlayerEntity pl) {
-        if (pl instanceof ServerPlayerEntity player) {
-            PacketByteBuf buffer = PacketByteBufs.create();
-            buffer.writeInt(thirstLevel);
-            buffer.writeInt(thirstTickTimer);
-            ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
-        }
-    }
+	public void syncThirst(PlayerEntity pl) {
+		if (pl instanceof ServerPlayerEntity player) {
+			PacketByteBuf buffer = PacketByteBufs.create();
+			buffer.writeInt(thirstLevel);
+			buffer.writeInt(thirstTickTimer);
+			ServerPlayNetworking.send(player, ServerEvents.THIRST, buffer);
+		}
+	}
 
 	public int getThirst() {
 		return thirstLevel;
 	}
 
-    public void add(int val) {
-        this.thirstLevel = Math.max(Math.min(this.thirstLevel+val, 20), 0);
-    }
+	public void add(int val) {
+		this.thirstLevel = Math.max(Math.min(this.thirstLevel + val, thirstLevelMax), 0);
+	}
 
 	public void drink(DrinkComponent.MixinAccessor item) {
 		drink(item.tempus$getDrinkComponent());
@@ -48,44 +49,44 @@ public class ThirstManager {
 		}
 	}
 
-    public boolean canDrink(PlayerEntity player) {
-        return player.getAbilities().invulnerable || thirstLevel < 20;
-    }
+	public boolean canDrink(PlayerEntity player) {
+		return player.getAbilities().invulnerable || thirstLevel < thirstLevelMax;
+	}
 
 	public void unpurifiedRollEffects() {
 		unpurifiedQueue = true;
 	}
 
 
-    public void update(PlayerEntity player) {
-        if (unpurifiedQueue) {
-            if (Math.random() > 0.5) {
-                player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), 4.0f);
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 10*20, 1));
-            }
-            unpurifiedQueue = false;
-        }
-        thirstTickTimer++;
-        if (thirstTickTimer>=thirstTickThreshold) {
+	public void update(PlayerEntity player) {
+		if (unpurifiedQueue) {
+			if (Math.random() > 0.5) {
+				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), Tempus.config.unpurifiedDamageAmount);
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, Tempus.config.unpurifiedHungerStatusDuration, Tempus.config.unpurifiedHungerStatusAmplifier));
+			}
+			unpurifiedQueue = false;
+		}
+		thirstTickTimer++;
+		if (thirstTickTimer >= thirstTickThreshold) {
 
-            if (thirstLevel<=0)
-                player.damage(ThirstDamageSource.of(player.getWorld(),ThirstDamageSource.THIRST), 2.0f);
-            else {
-                thirstLevel--;
-                Tempus.LOGGER.info("Thirst level is {}, tick count: {}",getThirst(),thirstTickTimer);
-            }
-            syncThirst(player);
+			if (thirstLevel <= 0)
+				player.damage(ThirstDamageSource.of(player.getWorld(), ThirstDamageSource.THIRST), Tempus.config.thirstDamageAmount);
+			else {
+				thirstLevel--;
+				Tempus.LOGGER.info("Thirst level is {}, tick count: {}", getThirst(), thirstTickTimer);
+			}
+			syncThirst(player);
 
 			thirstTickTimer = 0;
 		}
 	}
 
-    public void readNbt(NbtCompound nbt) {
-        if (nbt.contains("thirstLevel", NbtElement.NUMBER_TYPE)) {
-            this.thirstLevel = nbt.getInt("thirstLevel");
-            this.thirstTickTimer = nbt.getInt("thirstTickTimer");
-        }
-    }
+	public void readNbt(NbtCompound nbt) {
+		if (nbt.contains("thirstLevel", NbtElement.NUMBER_TYPE)) {
+			this.thirstLevel = nbt.getInt("thirstLevel");
+			this.thirstTickTimer = nbt.getInt("thirstTickTimer");
+		}
+	}
 
 	public void writeNbt(NbtCompound nbt) {
 		nbt.putInt("thirstLevel", thirstLevel);
