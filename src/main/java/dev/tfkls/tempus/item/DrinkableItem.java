@@ -51,6 +51,12 @@ public class DrinkableItem extends Item {
 			return this;
 		}
 
+		@Override
+		public Settings maxCount(int maxCount) {
+			super.maxCount(maxCount);
+			return this;
+		}
+
 		public Settings drinkRemainder(Item drinkRemainder) {
 			this.drinkRemainder = drinkRemainder;
 			return this;
