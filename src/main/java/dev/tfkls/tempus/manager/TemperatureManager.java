@@ -4,13 +4,18 @@ import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.effects.CustomStatusEffects;
 import dev.tfkls.tempus.effects.PlayerStatusEffector;
 import dev.tfkls.tempus.item.Enchantments;
+import dev.tfkls.tempus.networking.ServerEvents;
 import dev.tfkls.tempus.util.MathUtil;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
@@ -46,6 +51,16 @@ public class TemperatureManager {
 
 	public void setColdResistance(int coldResistance) {
 		this.coldResistance = coldResistance;
+	}
+
+	public void syncTemperature(PlayerEntity pl) {
+		if (pl instanceof ServerPlayerEntity player) {
+			PacketByteBuf buffer = PacketByteBufs.create();
+			NbtCompound nbt = new NbtCompound();
+			writeNbt(nbt);
+			buffer.writeNbt(nbt);
+			ServerPlayNetworking.send(player, ServerEvents.TEMPERATURE, buffer);
+		}
 	}
 
 	public void update(PlayerEntity player) {
@@ -103,6 +118,7 @@ public class TemperatureManager {
 				affectingTemperature /= ((float) coldResistance / 2 + 1);
 			}
 			effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
+			syncTemperature(player);
 		}
 		if (temperatureTickTimer >= environmentUpdateThreshold) temperatureTickTimer = 1;
 

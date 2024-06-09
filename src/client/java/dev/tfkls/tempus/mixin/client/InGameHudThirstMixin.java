@@ -3,6 +3,7 @@ package dev.tfkls.tempus.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.manager.TemperatureManager;
 import dev.tfkls.tempus.manager.ThirstManager;
 import dev.tfkls.tempus.manager.NutritionManager;
 import dev.tfkls.tempus.misc.NutritionType;
@@ -31,6 +32,7 @@ public abstract class InGameHudThirstMixin {
 
 	@Shadow private int ticks;
 
+	@Shadow private int scaledHeight;
 	@Unique
 	private static final Identifier icons = new Identifier("tempus", "icons.png");
 	@Unique
@@ -90,4 +92,19 @@ public abstract class InGameHudThirstMixin {
 			context.drawTexture(icons, horizontalPosition, verticalPosition, offset, 9, 9, 9);
 		}
 	}
+
+	@Inject(method = "renderExperienceBar", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;pop()V", ordinal = 0))
+	void renderTemperatureDisplay(DrawContext context, int x, CallbackInfo ci) {
+		MinecraftClient client = ((InGameHudAccessor) this).getClient();
+		PlayerEntity player = this.getCameraPlayer();
+
+		client.getProfiler().push("temperature");
+		float currentTemperature = ((TemperatureManager.MixinAccessor)player).tempus$getTemperatureManager().getTemperature();
+		int l = this.scaledHeight - 32 + 8;
+		int len = (int)(Math.abs(currentTemperature)/5f)*20;
+		if (currentTemperature >= 5f) context.drawTexture(icons, x+91, l, 0, 20, len, 2);
+		else if (currentTemperature <= -5f) context.drawTexture(icons, x+90-len, l, 0, 18, len, 2);
+		client.getProfiler().pop();
+	}
 }
+
