@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -19,9 +20,9 @@ import static dev.tfkls.tempus.Tempus.LOGGER;
  */
 
 public class SeasonManager {
-	long seasonOffset = 0;
-	boolean seasonCycle = true;
-	long seasonPeriod = 20 * 60 * 20 * 12; // 20min of realtime * 20 ticks * 12 months
+	private long seasonOffset = 0;
+	private boolean seasonCycle = true;
+	private long seasonPeriod = Tempus.config.seasonPeriod;
 
 	MinecraftServer currentServer = null;
 	private static final SeasonManager THIS = new SeasonManager();
@@ -38,8 +39,20 @@ public class SeasonManager {
 		this.seasonOffset = (seasonOffset + seasonPeriod) % seasonPeriod;
 	}
 
+	public boolean getSeasonCycle() {
+		return seasonCycle;
+	}
+
+	public void setSeasonCycle(boolean seasonCycle) {
+		this.seasonCycle = seasonCycle;
+	}
+
 	public long getSeasonPeriod() {
 		return seasonPeriod;
+	}
+
+	public void setSeasonPeriod(long seasonPeriod) {
+		this.seasonPeriod = seasonPeriod;
 	}
 
 	private World getOverworld() {
@@ -77,7 +90,7 @@ public class SeasonManager {
 	}
 
 	public float ambientTemperature() {
-		return 3.0f * sineMultiplier();
+		return Tempus.config.ambientTemperatureMultiplier * sineMultiplier();
 	}
 
 	public float biomeTemperatureDelta() {
@@ -85,6 +98,6 @@ public class SeasonManager {
 	}
 
 	public int modifyTickSpeed(int currentTickSpeed) {
-		return currentTickSpeed + MathUtil.roundDown(0.8f * sineMultiplier() * currentTickSpeed);
+		return currentTickSpeed + MathUtil.roundDown(Tempus.config.tickSpeedMultiplier * sineMultiplier() * currentTickSpeed);
 	}
 }

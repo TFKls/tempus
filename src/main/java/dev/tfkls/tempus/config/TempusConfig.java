@@ -39,19 +39,19 @@ public class TempusConfig {
 	public int touchingWaterSourceTemperature = -5;
 	public int wetSourceTemperature = -2;
 	public int tickCycleMax = 20;
-	public HashMap<Block, Integer> temperatures = new HashMap<>();
+	public HashMap<Block, Integer> blockTemperatures = new HashMap<>();
 
 	{
-		temperatures.put(Blocks.LAVA, 25);
-		temperatures.put(Blocks.END_STONE, -10);
-		temperatures.put(Blocks.NETHERRACK, 10);
-		temperatures.put(Blocks.ICE, -15);
-		temperatures.put(Blocks.SNOW, -10);
-		temperatures.put(Blocks.SNOW_BLOCK, -10);
-		temperatures.put(Blocks.WATER, -5);
-		temperatures.put(Blocks.FIRE, 15);
-		temperatures.put(Blocks.PACKED_ICE, -15);
-		temperatures.put(Blocks.FROSTED_ICE, -15);
+		blockTemperatures.put(Blocks.LAVA, 25);
+		blockTemperatures.put(Blocks.END_STONE, -10);
+		blockTemperatures.put(Blocks.NETHERRACK, 10);
+		blockTemperatures.put(Blocks.ICE, -15);
+		blockTemperatures.put(Blocks.SNOW, -10);
+		blockTemperatures.put(Blocks.SNOW_BLOCK, -10);
+		blockTemperatures.put(Blocks.WATER, -5);
+		blockTemperatures.put(Blocks.FIRE, 15);
+		blockTemperatures.put(Blocks.PACKED_ICE, -15);
+		blockTemperatures.put(Blocks.FROSTED_ICE, -15);
 	}
 
 	//Thirst constants

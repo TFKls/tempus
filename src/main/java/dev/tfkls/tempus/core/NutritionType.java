@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -35,7 +36,7 @@ public enum NutritionType {
 
 		private static void addNutritionStatusEffect(PlayerEntity player, StatusEffect effect, int amplifier) {
 			if (amplifier > 0) {
-				player.addStatusEffect(new StatusEffectInstance(effect, 5 * 20, amplifier - 1, true, false, true));
+				player.addStatusEffect(new StatusEffectInstance(effect, Tempus.config.nutritionStatusEffectDuration, amplifier - 1, true, false, true));
 			}
 		}
 

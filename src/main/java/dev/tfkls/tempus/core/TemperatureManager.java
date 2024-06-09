@@ -1,9 +1,9 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.util.MathUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,38 +21,33 @@ public class TemperatureManager {
 	private int coldResistance = 0;
 	private int temperatureTickTimer;
 	private float cachedDelta = 0;
-	private final int temperatureTickThreshold = 40;
-	private final int environmentUpdateThreshold = 80;
-	private final int radius = 3;
+	private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
+	private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
+	private final int radius = Tempus.config.radius;
+	private final int higherAffectingTemperature = Tempus.config.higherAffectingTemperature;
+	private final int lowerAffectingTemperature = Tempus.config.lowerAffectingTemperature;
 	protected PlayerStatusEffector effector = PlayerStatusEffector.of(
 			(player, heat) -> {
-				if (heat >= 6)
-					player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold + 10, (heat - 6) / 6, false, false, false));
-				if (heat >= 5)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (heat - 5) / 5, false, false, false));
+				if (heat >= higherAffectingTemperature)
+					player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.THIRST, temperatureTickThreshold + 10, (heat - higherAffectingTemperature) / higherAffectingTemperature, false, false, false));
+				if (heat >= lowerAffectingTemperature)
+					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (heat - lowerAffectingTemperature) / lowerAffectingTemperature, false, false, false));
 			},
 			(player, cold) -> {
-				if (cold >= 6)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, temperatureTickThreshold + 10, (cold - 6) / 6, false, false, false));
-				if (cold >= 5)
-					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (cold - 5) / 5, false, false, false));
+				if (cold >= higherAffectingTemperature)
+					player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, temperatureTickThreshold + 10, (cold - higherAffectingTemperature) / higherAffectingTemperature, false, false, false));
+				if (cold >= lowerAffectingTemperature)
+					player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, temperatureTickThreshold + 10, (cold - lowerAffectingTemperature) / lowerAffectingTemperature, false, false, false));
 			}
 	);
 
-	static HashMap<Block, Integer> temperatures = new HashMap<>();
+	static HashMap<Block, Integer> temperatures = Tempus.config.blockTemperatures;
 
-	static {
-		temperatures.put(Blocks.LAVA, 25);
-		temperatures.put(Blocks.END_STONE, -10);
-		temperatures.put(Blocks.NETHERRACK, 10);
-		temperatures.put(Blocks.ICE, -15);
-		temperatures.put(Blocks.SNOW, -10);
-		temperatures.put(Blocks.SNOW_BLOCK, -10);
-		temperatures.put(Blocks.WATER, -5);
-		temperatures.put(Blocks.FIRE, 15);
-		temperatures.put(Blocks.PACKED_ICE, -15);
-		temperatures.put(Blocks.FROSTED_ICE, -15);
-	}
+	private final int lowTemperatureHeight = Tempus.config.lowTemperatureHeight;
+	private final int highTemperatureHeight = Tempus.config.highTemperatureHeight;
+	private final int inWaterSourceTemperature = Tempus.config.inWaterSourceTemperature;
+	private final int touchingWaterSourceTemperature = Tempus.config.touchingWaterSourceTemperature;
+	private final int wetSourceTemperature = Tempus.config.wetSourceTemperature;
 
 	public float getTemperature() {
 		return temperature;
@@ -93,18 +88,20 @@ public class TemperatureManager {
 			// Time of day as well
 			deltaBuilder.addSource((float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
 			// Height in the world
-			if (player.getY() >= 80) deltaBuilder.addSource(-2f - (float) (player.getY() - 80) / 10, 0.01f);
-			if (player.getY() <= 30) deltaBuilder.addSource(2f + (float) (30 - player.getY()) / 10, 0.01f);
+			if (player.getY() >= lowTemperatureHeight)
+				deltaBuilder.addSource(-2f - (float) (player.getY() - lowTemperatureHeight) / 10, 0.01f);
+			if (player.getY() <= highTemperatureHeight)
+				deltaBuilder.addSource(2f + (float) (highTemperatureHeight - player.getY()) / 10, 0.01f);
 			// And the blocks around
 			deltaBuilder.addDelta(cachedDelta);
 
 			if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
 				if (player.isSubmergedInWater()) {
-					deltaBuilder.addSource(-10, 0.05f);
+					deltaBuilder.addSource(inWaterSourceTemperature, 0.05f);
 				} else if (player.isTouchingWater()) {
-					deltaBuilder.addSource(-5, 0.05f);
+					deltaBuilder.addSource(touchingWaterSourceTemperature, 0.05f);
 				} else if (player.isWet()) {
-					deltaBuilder.addSource(-2, 0.01f);
+					deltaBuilder.addSource(wetSourceTemperature, 0.01f);
 				}
 			}
 
@@ -122,11 +119,12 @@ public class TemperatureManager {
 
 	public class DeltaBuilder {
 		int tickCycle;
+		final int tickCycleMax = Tempus.config.tickCycleMax;
 		float temperatureDelta;
 
 		public DeltaBuilder() {
 			temperatureDelta = 0;
-			tickCycle = 20;
+			tickCycle = tickCycleMax;
 		}
 
 		public DeltaBuilder(int tickCycle) {
@@ -145,7 +143,7 @@ public class TemperatureManager {
 		}
 
 		public void applyDelta() {
-			temperature += temperatureDelta * ((float) tickCycle / 20);
+			temperature += temperatureDelta * ((float) tickCycle / tickCycleMax);
 		}
 
 		public float getDelta() {

@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
@@ -13,7 +14,9 @@ import static dev.tfkls.tempus.Tempus.LOGGER;
 public class NutritionManager {
 	private NutritionType nutritionType = NutritionType.NONE;
 	private int nutritionLevel = 0;
+	private final int nutritionLevelMax = Tempus.config.nutritionLevelMax;
 	private int nutritionTickTimer = 0;
+	private final int tickTimerBound = Tempus.config.nutritionTickTimerBound;
 	private PlayerStatusEffector cachedEffector = PlayerStatusEffector.NONE;
 
 	public int getNutritionLevel() {
@@ -26,7 +29,7 @@ public class NutritionManager {
 
 	public void update(PlayerEntity player) {
 		nutritionTickTimer++;
-		if (nutritionTickTimer >= 80) {
+		if (nutritionTickTimer >= tickTimerBound) {
 			nutritionTickTimer = 0;
 			int currentFoodLevel = player.getHungerManager().getFoodLevel();
 			cachedEffector.runEffect(player, Math.min(currentFoodLevel, nutritionLevel));
@@ -41,7 +44,7 @@ public class NutritionManager {
 			nutritionLevel = (newType == NutritionType.NONE ? 0 : 1);
 			cachedEffector = newType.effector;
 		} else if (nutritionType == newType) {
-			if (nutritionLevel < 10) nutritionLevel++;
+			if (nutritionLevel < nutritionLevelMax) nutritionLevel++;
 		} else {
 			nutritionLevel--;
 			if (nutritionLevel <= 0) {
@@ -51,7 +54,7 @@ public class NutritionManager {
 			}
 		}
 		LOGGER.info("New nutrition is: {} of {}", nutritionType, nutritionLevel);
-		nutritionTickTimer = 80;
+		nutritionTickTimer = tickTimerBound;
 	}
 
 	public void add(Item foodItem) {
@@ -70,7 +73,7 @@ public class NutritionManager {
 	public void setState(NutritionType type, int level) {
 		nutritionType = (level == 0) ? NutritionType.NONE : type;
 		nutritionLevel = (type == NutritionType.NONE) ? 0 : level;
-		nutritionTickTimer = 80;
+		nutritionTickTimer = tickTimerBound;
 		cachedEffector = nutritionType.effector;
 	}
 

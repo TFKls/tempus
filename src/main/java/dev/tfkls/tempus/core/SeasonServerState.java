@@ -1,5 +1,6 @@
 package dev.tfkls.tempus.core;
 
+import dev.tfkls.tempus.Tempus;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
@@ -12,9 +13,9 @@ import net.minecraft.world.PersistentStateManager;
  * We might move it to a static class of SeasonManager with no data of its own in the future
  */
 public class SeasonServerState extends PersistentState {
-	long seasonOffset = 0;
-	boolean seasonCycle = true;
-	long seasonPeriod = 20 * 60 * 20 * 12; // 20min of realtime * 20 ticks * 12 months
+	private long seasonOffset = 0;
+	private boolean seasonCycle = true;
+	private long seasonPeriod = Tempus.config.seasonPeriod;
 
 	SeasonServerState() {
 	}
@@ -46,14 +47,14 @@ public class SeasonServerState extends PersistentState {
 	}
 
 	public void loadSeasonManager(SeasonManager seasonManager) {
-		seasonOffset = seasonManager.seasonOffset;
-		seasonCycle = seasonManager.seasonCycle;
-		seasonPeriod = seasonManager.seasonPeriod;
+		seasonOffset = seasonManager.getSeasonOffset();
+		seasonCycle = seasonManager.getSeasonCycle();
+		seasonPeriod = seasonManager.getSeasonPeriod();
 	}
 
 	public void writeSeasonManager(SeasonManager seasonManager) {
-		seasonManager.seasonOffset = seasonOffset;
-		seasonManager.seasonCycle = seasonCycle;
-		seasonManager.seasonPeriod = seasonPeriod;
+		seasonManager.setSeasonOffset(seasonOffset);
+		seasonManager.setSeasonCycle(seasonCycle);
+		seasonManager.setSeasonPeriod(seasonPeriod);
 	}
 }
