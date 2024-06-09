@@ -14,7 +14,4 @@ public interface InGameHudAccessor {
 
 	@Accessor
 	Random getRandom();
-
-	@Accessor
-	Identifier getICONS();
 }
