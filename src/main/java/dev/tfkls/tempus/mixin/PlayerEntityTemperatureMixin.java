@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
-import dev.tfkls.tempus.managers.TemperatureManager;
+import dev.tfkls.tempus.manager.TemperatureManager;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;

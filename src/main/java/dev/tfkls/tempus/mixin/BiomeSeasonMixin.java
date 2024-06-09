@@ -1,7 +1,7 @@
 package dev.tfkls.tempus.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.tfkls.tempus.managers.SeasonManager;
+import dev.tfkls.tempus.manager.SeasonManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;

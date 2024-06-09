@@ -1,7 +1,7 @@
 package dev.tfkls.tempus.networking;
 
-import dev.tfkls.tempus.managers.NutritionManager;
-import dev.tfkls.tempus.managers.ThirstManager;
+import dev.tfkls.tempus.manager.NutritionManager;
+import dev.tfkls.tempus.manager.ThirstManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.util.Identifier;
 

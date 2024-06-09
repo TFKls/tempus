@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.effects;
 
-import dev.tfkls.tempus.managers.TemperatureManager;
+import dev.tfkls.tempus.manager.TemperatureManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;

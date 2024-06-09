@@ -3,7 +3,7 @@ package dev.tfkls.tempus.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import dev.tfkls.tempus.effects.CustomStatusEffects;
-import dev.tfkls.tempus.managers.ThirstManager;
+import dev.tfkls.tempus.manager.ThirstManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;

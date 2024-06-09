@@ -8,7 +8,7 @@ import dev.tfkls.tempus.effects.CustomStatusEffects;
 import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.item.TempusItems;
-import dev.tfkls.tempus.managers.SeasonManager;
+import dev.tfkls.tempus.manager.SeasonManager;
 import dev.tfkls.tempus.networking.ServerEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;

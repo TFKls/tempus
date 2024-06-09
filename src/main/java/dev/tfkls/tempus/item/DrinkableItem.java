@@ -1,8 +1,9 @@
 package dev.tfkls.tempus.item;
 
-import dev.tfkls.tempus.managers.ThirstManager;
+import dev.tfkls.tempus.manager.ThirstManager;
 import dev.tfkls.tempus.misc.DrinkComponent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,8 @@ import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -24,15 +27,20 @@ public class DrinkableItem extends Item {
 	@Unique
 	protected Item drinkRemainder;
 
+	@Unique
+	protected List<StatusEffectInstance> effects;
+
 	public DrinkableItem(Settings settings) {
 		super(settings);
 		this.drinkComponent = settings.drinkComponent;
 		this.drinkRemainder = settings.drinkRemainder;
+		this.effects = settings.effects;
 	}
 
 	public static class Settings extends Item.Settings {
 		DrinkComponent drinkComponent = new DrinkComponent(3);
 		Item drinkRemainder = Items.GLASS_BOTTLE;
+		List<StatusEffectInstance> effects = new ArrayList<>();
 
 		public Settings() {
 			this.maxCount(8);
@@ -45,6 +53,11 @@ public class DrinkableItem extends Item {
 
 		public Settings drinkRemainder(Item drinkRemainder) {
 			this.drinkRemainder = drinkRemainder;
+			return this;
+		}
+
+		public Settings addEffect(StatusEffectInstance effect) {
+			effects.add(effect);
 			return this;
 		}
 	}

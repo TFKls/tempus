@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.managers;
+package dev.tfkls.tempus.manager;
 
 import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.misc.SeasonServerState;

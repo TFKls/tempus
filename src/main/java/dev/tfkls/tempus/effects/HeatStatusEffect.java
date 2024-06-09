@@ -1,7 +1,6 @@
 package dev.tfkls.tempus.effects;
 
 import dev.tfkls.tempus.Tempus;
-import dev.tfkls.tempus.managers.TemperatureManager;
 import dev.tfkls.tempus.misc.CustomDamageSources;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;

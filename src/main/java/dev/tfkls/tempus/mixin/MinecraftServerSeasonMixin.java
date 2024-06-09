@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
-import dev.tfkls.tempus.managers.SeasonManager;
+import dev.tfkls.tempus.manager.SeasonManager;
 import dev.tfkls.tempus.misc.SeasonServerState;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

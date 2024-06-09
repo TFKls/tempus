@@ -2,7 +2,7 @@ package dev.tfkls.tempus.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import dev.tfkls.tempus.managers.SeasonManager;
+import dev.tfkls.tempus.manager.SeasonManager;
 import net.minecraft.server.world.ServerChunkManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.mixin;
 
-import dev.tfkls.tempus.managers.ThirstManager;
+import dev.tfkls.tempus.manager.ThirstManager;
 import dev.tfkls.tempus.misc.DrinkComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
