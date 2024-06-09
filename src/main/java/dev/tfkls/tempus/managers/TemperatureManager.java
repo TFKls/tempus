@@ -26,13 +26,10 @@ public class TemperatureManager {
 	private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
 	private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
 	private final int radius = Tempus.config.radius;
+	private final int temperatureEffectDuration = Tempus.config.temperatureEffectDuration;
 	protected PlayerStatusEffector effector = PlayerStatusEffector.of(
-			(player, heat) -> {
-				player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.HEAT, temperatureTickThreshold + 10, heat, false, false, false));
-			},
-			(player, cold) -> {
-				player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.COLD, temperatureTickThreshold + 10, cold, false, false, false));
-			}
+			(player, heat) -> player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.HEAT, temperatureEffectDuration, heat, false, false, false)),
+			(player, cold) -> player.addStatusEffect(new StatusEffectInstance(CustomStatusEffects.COLD, temperatureEffectDuration, cold, false, false, false))
 	);
 
 	static HashMap<Block, Integer> temperatures = Tempus.config.blockTemperatures;

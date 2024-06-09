@@ -28,6 +28,7 @@ public class TempusConfig {
 	public float tickSpeedMultiplier = 0.8f;
 
 	//Temperature constants
+	public int temperatureEffectDuration = 50;
 	public int temperatureTickThreshold = 40;
 	public int environmentUpdateThreshold = 80;
 	public int radius = 3;
