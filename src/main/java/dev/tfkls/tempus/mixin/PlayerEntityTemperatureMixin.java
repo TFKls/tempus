@@ -28,11 +28,11 @@ public abstract class PlayerEntityTemperatureMixin implements TemperatureManager
 	@Inject(method = "applyDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;applyArmorToDamage(Lnet/minecraft/entity/damage/DamageSource;F)F"))
 	public void damageUpdateTemperature(DamageSource source, float amount, CallbackInfo ci) {
 		switch (source.getType().msgId()) {
-			case "inFire" -> temperatureManager.applySingular(20, 0.1f);
-			case "onFire" -> temperatureManager.applySingular(20, 0.05f);
+			case "inFire" -> temperatureManager.applySingular(20, 0.05f);
+			case "onFire" -> temperatureManager.applySingular(20, 0.02f);
 			case "lava" -> temperatureManager.applySingular(30, 0.1f);
 			case "hotFloor" -> temperatureManager.applySingular(15, 0.2f);
-			case "lightningBolt" -> temperatureManager.applySingular(50, 0.3f);
+			case "lightningBolt" -> temperatureManager.applySingular(50, 0.2f);
 			default -> {
 			}
 		}

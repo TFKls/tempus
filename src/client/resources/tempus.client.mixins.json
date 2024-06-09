@@ -3,8 +3,9 @@
   "package": "dev.tfkls.tempus.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "InGameHudThirstMixin",
-    "InGameHudAccessor"
+    "AbstractInventoryScreenTemperatureMixin",
+    "InGameHudAccessor",
+    "InGameHudThirstMixin"
   ],
   "injectors": {
     "defaultRequire": 1
