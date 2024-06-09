@@ -79,7 +79,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
 	private static int executeQuery(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
 		for (PlayerEntity player : players) {
 			NutritionManager manager = ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager();
-			source.sendFeedback(() -> nutritionToText(player.getDisplayName().copy().append("'s nutrition: "), manager.getNutritionType(), manager.getNutritionLevel()), true);
+			source.sendFeedback(() -> nutritionToText(Text.translatable("command.tempus.nutrition.query", player.getDisplayName()), manager.getNutritionType(), manager.getNutritionLevel()), true);
 		}
 		return Command.SINGLE_SUCCESS;
 	}
@@ -91,9 +91,9 @@ public class NutritionCommand implements CommandRegistrationCallback {
 		if (players.size() == 1) {
 			PlayerEntity player = players.iterator().next();
 			NutritionManager manager = ((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager();
-			source.sendFeedback(() -> nutritionToText(player.getDisplayName().copy().append("'s new nutrition: "), manager.getNutritionType(), manager.getNutritionLevel()), true);
+			source.sendFeedback(() -> nutritionToText(Text.translatable("command.tempus.nutrition.set.single", player.getDisplayName()), manager.getNutritionType(), manager.getNutritionLevel()), true);
 		} else {
-			source.sendFeedback(() -> nutritionToText(Text.of("Updated nutrition of " + players.size() + " players to: ").copy(), type, level), true);
+			source.sendFeedback(() -> nutritionToText(Text.translatable("command.tempus.nutrition.set.multiple", players.size()).copy(), type, level), true);
 		}
 		return Command.SINGLE_SUCCESS;
 	}
@@ -112,7 +112,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
 					return type;
 				}
 			}
-			throw new DynamicCommandExceptionType(value -> new LiteralMessage("Invalid nutrition, expected carbohydrate, fat or protein but found '" + value + "'")).create(maybeType);
+			throw new DynamicCommandExceptionType(value -> Text.translatable("command.tempus.nutrition.invalid", value.toString().toLowerCase())).create(maybeType);
 		}
 
 		@Override

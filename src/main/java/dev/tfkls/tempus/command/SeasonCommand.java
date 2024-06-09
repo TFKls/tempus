@@ -39,23 +39,22 @@ public class SeasonCommand implements CommandRegistrationCallback {
 								.executes(SeasonCommand::executeAdd))));
 	}
 
-
 	private static int executeQuery(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(() -> Text.literal(String.valueOf(SeasonManager.getInstance().currentSeason())), false);
+		context.getSource().sendFeedback(() -> Text.translatable("command.tempus.season.query", SeasonManager.getInstance().currentSeason()), false);
 		return Command.SINGLE_SUCCESS;
 	}
 
 	private static int executeSet(CommandContext<ServerCommandSource> context) {
 		SeasonManager manager = SeasonManager.getInstance();
 		manager.setSeasonOffset(context.getArgument("offset", int.class) - (manager.currentSeason() - manager.getSeasonOffset()));
-		context.getSource().sendFeedback(() -> Text.literal("Set absolute offset to " + SeasonManager.getInstance().getSeasonOffset() + "; relative is " + SeasonManager.getInstance().currentSeason()), true);
+		context.getSource().sendFeedback(() -> Text.translatable("command.tempus.season.set", manager.getSeasonOffset(), manager.currentSeason()), true);
 		return Command.SINGLE_SUCCESS;
 	}
 
 	private static int executeAdd(CommandContext<ServerCommandSource> context) {
 		SeasonManager manager = SeasonManager.getInstance();
 		manager.setSeasonOffset(manager.getSeasonOffset() + context.getArgument("offset", int.class));
-		context.getSource().sendFeedback(() -> Text.literal("Set absolute offset to " + SeasonManager.getInstance().getSeasonOffset() + "; delta is " + context.getArgument("offset", int.class)), true);
+		context.getSource().sendFeedback(() -> Text.translatable("command.tempus.season.add", manager.getSeasonOffset(), context.getArgument("offset", int.class)), true);
 		return Command.SINGLE_SUCCESS;
 	}
 }

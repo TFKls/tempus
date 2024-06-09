@@ -1,5 +1,18 @@
 {
   "death.attack.thirst": "%1$s died from thirst!",
   "effect.tempus.thirst": "Thirst",
-  "effect.tempus.cold_resistance": "Cold Resistance"
+  "effect.tempus.cold_resistance": "Cold Resistance",
+
+  "command.tempus.season.query": "Current season is %s",
+  "command.tempus.season.set": "Set absolute offset to %s; relative is %s",
+  "command.tempus.season.add": "Set absolute offset to %s; delta is %s",
+
+  "command.tempus.nutrition.query": "%s's nutrition: ",
+  "command.tempus.nutrition.set.single": "%s's new nutrition: ",
+  "command.tempus.nutrition.set.multiple": "Updated nutrition of %d players to: ",
+  "command.tempus.nutrition.invalid": "Invalid nutrition, expected carbohydrate, fat or protein but found '%s'",
+
+  "command.tempus.temperature.query": "%s's temperature: %s",
+  "command.tempus.temperature.set.single": "%s's new temperature: %s",
+  "command.tempus.temperature.set.multiple": "Updated temperature of %d players %s: %s"
 }

@@ -62,7 +62,7 @@ public class TemperatureCommand implements CommandRegistrationCallback {
 	private static int executeQuery(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
 		for (PlayerEntity player : players) {
 			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
-			source.sendFeedback(() -> player.getDisplayName().copy().append("'s temperature: ").append(String.valueOf(manager.getTemperature())), true);
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.query", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
 		}
 		return Command.SINGLE_SUCCESS;
 	}
@@ -77,9 +77,9 @@ public class TemperatureCommand implements CommandRegistrationCallback {
 		if (players.size() == 1) {
 			PlayerEntity player = players.iterator().next();
 			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
-			source.sendFeedback(() -> player.getDisplayName().copy().append("'s new temperature: ").append(String.valueOf(manager.getTemperature())), true);
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.single", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
 		} else {
-			source.sendFeedback(() -> Text.of("Updated nutrition of " + players.size() + " players " + (isAdd ? "by" : "to") + ": " + value), true);
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.multiple", players.size(), (isAdd ? "by" : "to"), String.valueOf(value)), true);
 		}
 		return Command.SINGLE_SUCCESS;
 	}
