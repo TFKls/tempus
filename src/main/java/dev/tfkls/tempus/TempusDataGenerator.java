@@ -1,5 +1,6 @@
 package dev.tfkls.tempus;
 
+import dev.tfkls.tempus.datagen.CustomItemModelProvider;
 import dev.tfkls.tempus.datagen.DrinkableItemsRecipeProvider;
 import dev.tfkls.tempus.datagen.VanillaNutritionTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -11,5 +12,6 @@ public class TempusDataGenerator implements DataGeneratorEntrypoint {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 		pack.addProvider(VanillaNutritionTagProvider::new);
 		pack.addProvider(DrinkableItemsRecipeProvider::new);
+		pack.addProvider(CustomItemModelProvider::new);
 	}
 }
