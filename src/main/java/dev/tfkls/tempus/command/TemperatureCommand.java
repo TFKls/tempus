@@ -73,6 +73,7 @@ public class TemperatureCommand implements CommandRegistrationCallback {
 			float goal = (isAdd ? manager.getTemperature() : 0) + value;
 			manager.applyUninsulatedSingular(0, 1f);
 			manager.applyUninsulatedSingular(value, 1f);
+			manager.syncTemperature(player);
 		}
 		if (players.size() == 1) {
 			PlayerEntity player = players.iterator().next();

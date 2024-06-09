@@ -86,6 +86,7 @@ public class NutritionCommand implements CommandRegistrationCallback {
 	private static int executeSet(ServerCommandSource source, NutritionType type, int level, Collection<ServerPlayerEntity> players) {
 		for (PlayerEntity player : players) {
 			((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().setState(type, level);
+			((NutritionManager.MixinAccessor) player.getHungerManager()).tempus$getNutritionManager().syncNutrition(player);
 		}
 		if (players.size() == 1) {
 			PlayerEntity player = players.iterator().next();
