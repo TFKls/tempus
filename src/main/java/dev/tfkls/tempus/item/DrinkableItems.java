@@ -1,7 +1,9 @@
 package dev.tfkls.tempus.item;
 
 import dev.tfkls.tempus.Tempus;
+import dev.tfkls.tempus.effects.CustomStatusEffects;
 import dev.tfkls.tempus.misc.DrinkComponent;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -9,7 +11,8 @@ import net.minecraft.util.Identifier;
 public class DrinkableItems {
 	public static final DrinkableItem PURIFIED_WATER_BOTTLE = new DrinkableItem(new DrinkableItem.Settings().drink(new DrinkComponent(3, true)));
 	public static final DrinkableItem WHEAT_EXTRACT = new DrinkableItem(new DrinkableItem.Settings().drink(new DrinkComponent(3, false)));
-	public static final DrinkableItem WHEAT_BEER = new DrinkableItem(new DrinkableItem.Settings().drink(new DrinkComponent(8, true)));
+    public static final DrinkableItem WHEAT_BEER = new DrinkableItem(
+            new DrinkableItem.Settings().drink(new DrinkComponent(8, true)).addEffect(new StatusEffectInstance(CustomStatusEffects.TIPSY, 60*20, 0)));
 
 	public static void register() {
 		Registry.register(Registries.ITEM, new Identifier("tempus", "purified_water_bottle"), PURIFIED_WATER_BOTTLE);

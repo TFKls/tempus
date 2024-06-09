@@ -76,6 +76,7 @@ public class DrinkableItem extends Item {
 		ThirstManager manager = ((ThirstManager.MixinAccessor) player).tempus$getThirstManager();
 		manager.drink(drinkComponent);
 		manager.syncThirst(player);
+		effects.forEach(player::addStatusEffect);
 		if (!player.getAbilities().creativeMode) {
 			if (!decremented) stack.decrement(1);
 			player.getInventory().offerOrDrop(new ItemStack(drinkRemainder));
