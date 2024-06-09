@@ -19,77 +19,79 @@ import java.util.Objects;
 
 public class DrinkableItem extends Item {
 
-	@Unique
-	protected DrinkComponent drinkComponent;
-	@Unique
-	protected Item drinkRemainder;
+    @Unique
+    protected DrinkComponent drinkComponent;
+    @Unique
+    protected Item drinkRemainder;
 
-	public DrinkableItem(Settings settings) {
-		super(settings);
-		this.drinkComponent = settings.drinkComponent;
-		this.drinkRemainder = settings.drinkRemainder;
-	}
+    public DrinkableItem(Settings settings) {
+        super(settings);
+        this.drinkComponent = settings.drinkComponent;
+        this.drinkRemainder = settings.drinkRemainder;
+    }
 
-	public static class Settings extends Item.Settings {
-		DrinkComponent drinkComponent = new DrinkComponent(3);
-		Item drinkRemainder = Items.GLASS_BOTTLE;
+    public static class Settings extends Item.Settings {
+        DrinkComponent drinkComponent = new DrinkComponent(3);
+        Item drinkRemainder = Items.GLASS_BOTTLE;
 
-		public Settings() {
-			this.maxCount(8);
-		}
+        public Settings() {
+            this.maxCount(8);
+        }
 
-		public Settings drink(DrinkComponent drinkComponent) {
-			this.drinkComponent = drinkComponent;
-			return this;
-		}
+        public Settings drink(DrinkComponent drinkComponent) {
+            this.drinkComponent = drinkComponent;
+            return this;
+        }
 
-		public Settings drinkRemainder(Item drinkRemainder) {
-			this.drinkRemainder = drinkRemainder;
-			return this;
-		}
-	}
+        public Settings drinkRemainder(Item drinkRemainder) {
+            this.drinkRemainder = drinkRemainder;
+            return this;
+        }
+    }
 
-	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-		boolean decremented = false;
-		if (this.isFood()) {
-			user.eatFood(world, stack);
-			decremented = true;
-		}
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        boolean decremented = false;
+        if (this.isFood()) {
+            user.eatFood(world,stack);
+            decremented = true;
+        }
 
-		PlayerEntity player = (user instanceof PlayerEntity ? (PlayerEntity) user : null);
-		if (player == null) return stack;
+        PlayerEntity player = (user instanceof PlayerEntity ? (PlayerEntity) user : null);
+        if (player == null) return  stack;
 
-		((ThirstManager.MixinAccessor) player).tempus$getThirstManager().drink(drinkComponent);
-		if (!player.getAbilities().creativeMode) {
-			if (!decremented) stack.decrement(1);
-			player.getInventory().offerOrDrop(new ItemStack(drinkRemainder));
-		}
-		if (!world.isClient() && !this.drinkComponent.isPurified()) {
-			((ThirstManager.MixinAccessor) player).tempus$getThirstManager().unpurifiedRollEffects();
-		}
+        ThirstManager manager = ((ThirstManager.MixinAccessor)player).tempus$getThirstManager();
+        manager.drink(drinkComponent);
+        manager.syncThirst(player);
+        if (!player.getAbilities().creativeMode) {
+            if (!decremented) stack.decrement(1);
+            player.getInventory().offerOrDrop(new ItemStack(drinkRemainder));
+        }
+        if (!world.isClient() && !this.drinkComponent.isPurified()) {
+            manager.unpurifiedRollEffects();
+        }
 
-		return stack;
-	}
+        return stack;
+    }
 
-	@Override
-	public int getMaxUseTime(ItemStack stack) {
-		return 32;
-	}
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return 32;
+    }
 
-	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.DRINK;
-	}
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.DRINK;
+    }
 
-	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		// Objects.requireNonNull() used to suppress a warning
-		if ((!this.isFood() || !user.canConsume(Objects.requireNonNull(this.getFoodComponent()).isAlwaysEdible()))
-				&& !((ThirstManager.MixinAccessor) user).tempus$getThirstManager().canDrink()) {
-			ItemStack itemStack = user.getStackInHand(hand);
-			return TypedActionResult.fail(itemStack);
-		}
-		return ItemUsage.consumeHeldItem(world, user, hand);
-	}
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        // Objects.requireNonNull() used to suppress a warning
+        if ((!this.isFood() || !user.canConsume(Objects.requireNonNull(this.getFoodComponent()).isAlwaysEdible()))
+        && !((ThirstManager.MixinAccessor)user).tempus$getThirstManager().canDrink(user)) {
+            ItemStack itemStack = user.getStackInHand(hand);
+            return TypedActionResult.fail(itemStack);
+        }
+        return ItemUsage.consumeHeldItem(world, user, hand);
+    }
 }

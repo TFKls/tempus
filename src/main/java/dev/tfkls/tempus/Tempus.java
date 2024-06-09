@@ -10,6 +10,7 @@ import dev.tfkls.tempus.init.DrinkFermenterInitializer;
 import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.item.TempusItems;
+import dev.tfkls.tempus.networking.ServerEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -52,6 +53,9 @@ public class Tempus implements ModInitializer {
 
 		LOGGER.info("Saving config...");
 		config.save();
+
+		LOGGER.info("Registering server events...");
+		ServerEvents.registerServerEvents();
 
 		LOGGER.info("Registering gamerules...");
 		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
