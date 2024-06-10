@@ -15,14 +15,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PotionItem.class)
 public abstract class PotionItemThirstMixin {
 
-	@Inject(method = "finishUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"))
-	public void injectFinishUsing(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-		((ThirstManager.MixinAccessor) user).tempus$getThirstManager().drink((DrinkComponent.MixinAccessor) this);
-		if (user instanceof PlayerEntity player)
-			((ThirstManager.MixinAccessor) user).tempus$getThirstManager().syncThirst(player);
-		if (!world.isClient() && stack.getName().getString().equals("Water Bottle")) {
-			// Unpurified edge-case
-			((ThirstManager.MixinAccessor) user).tempus$getThirstManager().unpurifiedRollEffects();
-		}
-	}
+    @Inject(method = "finishUsing",
+            at = @At(value = "INVOKE",
+					 target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"))
+    public void injectFinishUsing(
+            ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+        ((ThirstManager.MixinAccessor) user).tempus$getThirstManager().drink((DrinkComponent.MixinAccessor) this);
+        if (user instanceof PlayerEntity player)
+            ((ThirstManager.MixinAccessor) user).tempus$getThirstManager().syncThirst(player);
+        if (!world.isClient() && stack.getName().getString().equals("Water Bottle")) {
+            // Unpurified edge-case
+            ((ThirstManager.MixinAccessor) user).tempus$getThirstManager().unpurifiedRollEffects();
+        }
+    }
 }

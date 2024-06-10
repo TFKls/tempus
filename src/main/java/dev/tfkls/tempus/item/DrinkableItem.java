@@ -19,99 +19,103 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 public class DrinkableItem extends Item {
 
-	@Unique
-	protected DrinkComponent drinkComponent;
-	@Unique
-	protected Item drinkRemainder;
+    @Unique
+    protected DrinkComponent drinkComponent;
 
-	@Unique
-	protected List<StatusEffectInstance> effects;
+    @Unique
+    protected Item drinkRemainder;
 
-	public DrinkableItem(Settings settings) {
-		super(settings);
-		this.drinkComponent = settings.drinkComponent;
-		this.drinkRemainder = settings.drinkRemainder;
-		this.effects = settings.effects;
-	}
+    @Unique
+    protected List<StatusEffectInstance> effects;
 
-	public static class Settings extends Item.Settings {
-		DrinkComponent drinkComponent = new DrinkComponent(3);
-		Item drinkRemainder = Items.GLASS_BOTTLE;
-		List<StatusEffectInstance> effects = new ArrayList<>();
+    public DrinkableItem(Settings settings) {
+        super(settings);
+        this.drinkComponent = settings.drinkComponent;
+        this.drinkRemainder = settings.drinkRemainder;
+        this.effects = settings.effects;
+    }
 
-		public Settings() {
-			this.maxCount(8);
-		}
+    @Override
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
+        boolean decremented = false;
+        if (this.isFood()) {
+            user.eatFood(world, stack);
+            decremented = true;
+        }
 
-		public Settings drink(DrinkComponent drinkComponent) {
-			this.drinkComponent = drinkComponent;
-			return this;
-		}
+        PlayerEntity player = (user instanceof PlayerEntity ? (PlayerEntity) user : null);
+        if (player == null) return stack;
 
-		@Override
-		public Settings maxCount(int maxCount) {
-			super.maxCount(maxCount);
-			return this;
-		}
+        ThirstManager manager = ((ThirstManager.MixinAccessor) player).tempus$getThirstManager();
+        manager.drink(drinkComponent);
+        manager.syncThirst(player);
+        effects.forEach(player::addStatusEffect);
+        if (!player.getAbilities().creativeMode) {
+            if (!decremented) stack.decrement(1);
+            player.getInventory().offerOrDrop(new ItemStack(drinkRemainder));
+        }
+        if (!world.isClient() && !this.drinkComponent.isPurified()) {
+            manager.unpurifiedRollEffects();
+        }
 
-		public Settings drinkRemainder(Item drinkRemainder) {
-			this.drinkRemainder = drinkRemainder;
-			return this;
-		}
+        return stack;
+    }
 
-		public Settings addEffect(StatusEffectInstance effect) {
-			effects.add(effect);
-			return this;
-		}
-	}
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return 32;
+    }
 
-	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-		boolean decremented = false;
-		if (this.isFood()) {
-			user.eatFood(world, stack);
-			decremented = true;
-		}
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.DRINK;
+    }
 
-		PlayerEntity player = (user instanceof PlayerEntity ? (PlayerEntity) user : null);
-		if (player == null) return stack;
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        // Objects.requireNonNull() used to suppress a warning
+        if ((!this.isFood()
+                        || !user.canConsume(
+                                Objects.requireNonNull(this.getFoodComponent()).isAlwaysEdible()))
+                && !((ThirstManager.MixinAccessor) user)
+                        .tempus$getThirstManager()
+                        .canDrink(user)) {
+            ItemStack itemStack = user.getStackInHand(hand);
+            return TypedActionResult.fail(itemStack);
+        }
+        return ItemUsage.consumeHeldItem(world, user, hand);
+    }
 
-		ThirstManager manager = ((ThirstManager.MixinAccessor) player).tempus$getThirstManager();
-		manager.drink(drinkComponent);
-		manager.syncThirst(player);
-		effects.forEach(player::addStatusEffect);
-		if (!player.getAbilities().creativeMode) {
-			if (!decremented) stack.decrement(1);
-			player.getInventory().offerOrDrop(new ItemStack(drinkRemainder));
-		}
-		if (!world.isClient() && !this.drinkComponent.isPurified()) {
-			manager.unpurifiedRollEffects();
-		}
+    public static class Settings extends Item.Settings {
+        DrinkComponent drinkComponent = new DrinkComponent(3);
+        Item drinkRemainder = Items.GLASS_BOTTLE;
+        List<StatusEffectInstance> effects = new ArrayList<>();
 
-		return stack;
-	}
+        public Settings() {
+            this.maxCount(8);
+        }
 
-	@Override
-	public int getMaxUseTime(ItemStack stack) {
-		return 32;
-	}
+        public Settings drink(DrinkComponent drinkComponent) {
+            this.drinkComponent = drinkComponent;
+            return this;
+        }
 
-	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.DRINK;
-	}
+        @Override
+        public Settings maxCount(int maxCount) {
+            super.maxCount(maxCount);
+            return this;
+        }
 
-	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		// Objects.requireNonNull() used to suppress a warning
-		if ((!this.isFood() || !user.canConsume(Objects.requireNonNull(this.getFoodComponent()).isAlwaysEdible()))
-				&& !((ThirstManager.MixinAccessor) user).tempus$getThirstManager().canDrink(user)) {
-			ItemStack itemStack = user.getStackInHand(hand);
-			return TypedActionResult.fail(itemStack);
-		}
-		return ItemUsage.consumeHeldItem(world, user, hand);
-	}
+        public Settings drinkRemainder(Item drinkRemainder) {
+            this.drinkRemainder = drinkRemainder;
+            return this;
+        }
+
+        public Settings addEffect(StatusEffectInstance effect) {
+            effects.add(effect);
+            return this;
+        }
+    }
 }

@@ -14,32 +14,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HungerManager.class)
 public abstract class HungerManagerNutritionMixin implements NutritionManager.MixinAccessor {
-	@Unique
-	protected NutritionManager nutritionManager = new NutritionManager();
+    @Unique
+    protected NutritionManager nutritionManager = new NutritionManager();
 
-	@Unique
-	public NutritionManager tempus$getNutritionManager() {
-		return nutritionManager;
-	}
+    @Unique
+    public NutritionManager tempus$getNutritionManager() {
+        return nutritionManager;
+    }
 
-	@Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/HungerManager;add(IF)V"))
-	private void injectFoodNutritionType(Item item, ItemStack stack, CallbackInfo ci) {
-		nutritionManager.add(item);
-		if (stack.getHolder() instanceof PlayerEntity player) nutritionManager.syncNutrition(player);
-	}
+    @Inject(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/HungerManager;add(IF)V"))
+    private void injectFoodNutritionType(Item item, ItemStack stack, CallbackInfo ci) {
+        nutritionManager.add(item);
+        if (stack.getHolder() instanceof PlayerEntity player) nutritionManager.syncNutrition(player);
+    }
 
-	@Inject(method = "readNbt", at = @At(value = "TAIL"))
-	private void readNutritionNbt(NbtCompound nbt, CallbackInfo ci) {
-		nutritionManager.readNbt(nbt);
-	}
+    @Inject(method = "readNbt", at = @At(value = "TAIL"))
+    private void readNutritionNbt(NbtCompound nbt, CallbackInfo ci) {
+        nutritionManager.readNbt(nbt);
+    }
 
-	@Inject(method = "writeNbt", at = @At(value = "TAIL"))
-	private void writeNutritionNbt(NbtCompound nbt, CallbackInfo ci) {
-		nutritionManager.writeNbt(nbt);
-	}
+    @Inject(method = "writeNbt", at = @At(value = "TAIL"))
+    private void writeNutritionNbt(NbtCompound nbt, CallbackInfo ci) {
+        nutritionManager.writeNbt(nbt);
+    }
 
-	@Inject(method = "update", at = @At(value = "TAIL"))
-	private void runNutritionEffects(PlayerEntity player, CallbackInfo ci) {
-		nutritionManager.update(player);
-	}
+    @Inject(method = "update", at = @At(value = "TAIL"))
+    private void runNutritionEffects(PlayerEntity player, CallbackInfo ci) {
+        nutritionManager.update(player);
+    }
 }

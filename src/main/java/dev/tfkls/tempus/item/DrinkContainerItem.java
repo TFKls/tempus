@@ -22,6 +22,13 @@ public class DrinkContainerItem extends Item {
 		this.waterItem = waterItem;
 	}
 
+	public static Pair<DrinkContainerItem, DrinkableItem> createItemPair(DrinkableItem.Settings settings) {
+		DrinkContainerItem containerItem = new DrinkContainerItem(settings, null);
+		DrinkableItem waterItem = new DrinkableItem(settings.drinkRemainder(containerItem));
+		containerItem.waterItem = waterItem;
+		return new Pair<>(containerItem, waterItem);
+	}
+
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack itemStack = user.getStackInHand(hand);
@@ -32,12 +39,5 @@ public class DrinkContainerItem extends Item {
 			return TypedActionResult.success(result);
 		}
 		return TypedActionResult.pass(itemStack);
-	}
-
-	public static Pair<DrinkContainerItem, DrinkableItem> createItemPair(DrinkableItem.Settings settings) {
-		DrinkContainerItem containerItem = new DrinkContainerItem(settings, null);
-		DrinkableItem waterItem = new DrinkableItem(settings.drinkRemainder(containerItem));
-		containerItem.waterItem = waterItem;
-		return new Pair<>(containerItem, waterItem);
 	}
 }

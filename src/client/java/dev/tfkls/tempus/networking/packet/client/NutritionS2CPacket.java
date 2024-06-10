@@ -8,12 +8,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
 public class NutritionS2CPacket {
-    public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
+    public static void receive(
+            MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         NbtCompound nbt = buf.readNbt();
 
         client.execute(() -> {
             if (client.player == null) return;
-            NutritionManager.MixinAccessor hungerManager = (NutritionManager.MixinAccessor) client.player.getHungerManager();
+            NutritionManager.MixinAccessor hungerManager =
+                    (NutritionManager.MixinAccessor) client.player.getHungerManager();
             if (hungerManager == null || nbt == null) return;
             hungerManager.tempus$getNutritionManager().readNbt(nbt);
         });

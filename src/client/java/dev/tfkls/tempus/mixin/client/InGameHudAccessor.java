@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(InGameHud.class)
 public interface InGameHudAccessor {
-	@Accessor
-	MinecraftClient getClient();
+    @Accessor
+    MinecraftClient getClient();
 
-	@Accessor
-	Random getRandom();
+    @Accessor
+    Random getRandom();
 }

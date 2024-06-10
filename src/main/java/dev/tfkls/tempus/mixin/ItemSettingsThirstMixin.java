@@ -8,18 +8,18 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Item.Settings.class)
 public abstract class ItemSettingsThirstMixin implements DrinkComponent.MutableMixinAccessor {
-	@Unique
-	@Nullable
-	public DrinkComponent drinkComponent = null;
+    @Unique
+    @Nullable
+    public DrinkComponent drinkComponent = null;
 
-	@Unique
-	public DrinkComponent.MutableMixinAccessor tempus$setDrinkComponent(DrinkComponent drinkComponent) {
-		this.drinkComponent = drinkComponent;
-		return this;
-	}
+    @Unique
+    public DrinkComponent.MutableMixinAccessor tempus$setDrinkComponent(DrinkComponent drinkComponent) {
+        this.drinkComponent = drinkComponent;
+        return this;
+    }
 
-	@Unique
-	public DrinkComponent tempus$getDrinkComponent() {
-		return drinkComponent;
-	}
+    @Unique
+    public DrinkComponent tempus$getDrinkComponent() {
+        return drinkComponent;
+    }
 }

@@ -9,21 +9,25 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class ColdResistanceStatusEffect extends StatusEffect {
 
-	public ColdResistanceStatusEffect() {
-		super(StatusEffectCategory.BENEFICIAL, 0x98D983);
-	}
+    public ColdResistanceStatusEffect() {
+        super(StatusEffectCategory.BENEFICIAL, 0x98D983);
+    }
 
-	@Override
-	public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		if (entity instanceof PlayerEntity player) {
-			((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager().setColdResistance(amplifier);
-		}
-	}
+    @Override
+    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        if (entity instanceof PlayerEntity player) {
+            ((TemperatureManager.MixinAccessor) player)
+                    .tempus$getTemperatureManager()
+                    .setColdResistance(amplifier);
+        }
+    }
 
-	@Override
-	public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		if (entity instanceof PlayerEntity player) {
-			((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager().setColdResistance(0);
-		}
-	}
+    @Override
+    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+        if (entity instanceof PlayerEntity player) {
+            ((TemperatureManager.MixinAccessor) player)
+                    .tempus$getTemperatureManager()
+                    .setColdResistance(0);
+        }
+    }
 }

@@ -39,6 +39,14 @@ public class TempusConfig {
 	public int wetSourceTemperature = -2;
 	public int tickCycleMax = 20;
 	public HashMap<Block, Integer> blockTemperatures = new HashMap<>();
+	//Thirst constants
+	public int thirstLevelMax = 20;
+	public int thirstTickThreshold = 80;
+	public float unpurifiedDamageAmount = 4.0f;
+	public int unpurifiedHungerStatusDuration = 200;
+	public int unpurifiedHungerStatusAmplifier = 1;
+	public float thirstDamageAmount = 2.0f;
+	public int thirstStatusEffectThreshold = 100;
 
 	{
 		blockTemperatures.put(Blocks.LAVA, 25);
@@ -52,15 +60,6 @@ public class TempusConfig {
 		blockTemperatures.put(Blocks.PACKED_ICE, -15);
 		blockTemperatures.put(Blocks.FROSTED_ICE, -15);
 	}
-
-	//Thirst constants
-	public int thirstLevelMax = 20;
-	public int thirstTickThreshold = 80;
-	public float unpurifiedDamageAmount = 4.0f;
-	public int unpurifiedHungerStatusDuration = 200;
-	public int unpurifiedHungerStatusAmplifier = 1;
-	public float thirstDamageAmount = 2.0f;
-	public int thirstStatusEffectThreshold = 100;
 
 	public static TempusConfig load() {
 		if (CONFIG_FILE.exists()) {

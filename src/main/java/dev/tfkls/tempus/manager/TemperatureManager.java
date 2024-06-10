@@ -24,223 +24,214 @@ import java.util.HashMap;
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
 public class TemperatureManager {
-	protected float temperature = 0;
-	protected float insulation = 0;
-	private int coldResistance = 0;
-	private int temperatureTickTimer;
-	private float cachedDelta = 0;
-	private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
-	private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
-	private final int radius = Tempus.config.radius;
-	protected PlayerStatusEffector effector = PlayerStatusEffector.of(
-			(player, heat) -> {
-				if (MathUtil.shiftedUniformRandom(15, 20, heat)) {
-					player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_HEAT), (float)
-							(heat * Math.random()));
-				}
-				if (MathUtil.shiftedUniformRandom(10, 20, heat)) {
-					player.addStatusEffect(new StatusEffectInstance(
-							StatusEffects.MINING_FATIGUE, temperatureTickThreshold + 2, 0, true, true, false));
-				}
-				if (MathUtil.shiftedUniformRandom(10, 15, heat)) {
-					player.addStatusEffect(new StatusEffectInstance(
-							StatusEffects.NAUSEA,
-							temperatureTickThreshold / 2,
-							0,
-							true,
-							true,
-							false
-					));
-				}
-				if (MathUtil.shiftedUniformRandom(5, 15, heat)) {
-					player.addStatusEffect(new StatusEffectInstance(
-							StatusEffects.GLOWING,
-							2 * temperatureTickThreshold,
-							0,
-							true,
-							true,
-							false
-					));
-				}
-				player.getActiveStatusEffects().remove(CustomStatusEffects.THIRST);
-				if (heat >= 5) {
-					player.addStatusEffect(new StatusEffectInstance(
-							CustomStatusEffects.THIRST,
-							2 * temperatureTickThreshold,
-							(heat - 5) / 5,
-							false,
-							false,
-							false));
-				}
-			},
-			(player, cold) -> {
-				if (MathUtil.shiftedUniformRandom(15, 20, cold)) {
-					player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
-							(cold * Math.random()));
-				}
-				if (MathUtil.shiftedUniformRandom(10, 20, cold)) {
-					player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
-							(2f * (Math.random())));
-				}
-				if (MathUtil.shiftedUniformRandom(10, 15, cold)) {
-					player.addStatusEffect(new StatusEffectInstance(
-							StatusEffects.SLOWNESS, temperatureTickThreshold + 2, (cold - 10) / 5, true, true, false));
-				}
-				if (MathUtil.shiftedUniformRandom(5, 15, cold)) {
-					player.addStatusEffect(new StatusEffectInstance(
-							StatusEffects.WEAKNESS, temperatureTickThreshold + 2, (cold - 5) / 5, true, true, false));
-				}
-			});
+    static HashMap<Block, Integer> temperatures = Tempus.config.blockTemperatures;
+    private final int temperatureTickThreshold = Tempus.config.temperatureTickThreshold;
+    private final int environmentUpdateThreshold = Tempus.config.environmentUpdateThreshold;
+    private final int radius = Tempus.config.radius;
+    private final int lowTemperatureHeight = Tempus.config.lowTemperatureHeight;
+    private final int highTemperatureHeight = Tempus.config.highTemperatureHeight;
+    private final int inWaterSourceTemperature = Tempus.config.inWaterSourceTemperature;
+    private final int touchingWaterSourceTemperature = Tempus.config.touchingWaterSourceTemperature;
+    private final int wetSourceTemperature = Tempus.config.wetSourceTemperature;
+    protected float temperature = 0;
+    protected float insulation = 0;
+    protected PlayerStatusEffector effector = PlayerStatusEffector.of(
+            (player, heat) -> {
+                if (MathUtil.shiftedUniformRandom(15, 20, heat)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_HEAT), (float)
+                            (heat * Math.random()));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 20, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.MINING_FATIGUE, temperatureTickThreshold + 2, 0, true, true, false));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 15, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.NAUSEA, temperatureTickThreshold / 2, 0, true, true, false));
+                }
+                if (MathUtil.shiftedUniformRandom(5, 15, heat)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.GLOWING, 2 * temperatureTickThreshold, 0, true, true, false));
+                }
+                player.getActiveStatusEffects().remove(CustomStatusEffects.THIRST);
+                if (heat >= 5) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            CustomStatusEffects.THIRST,
+                            2 * temperatureTickThreshold,
+                            (heat - 5) / 5,
+                            false,
+                            false,
+                            false));
+                }
+            },
+            (player, cold) -> {
+                if (MathUtil.shiftedUniformRandom(15, 20, cold)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
+                            (cold * Math.random()));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 20, cold)) {
+                    player.damage(CustomDamageSources.of(player.getWorld(), CustomDamageSources.EXTREME_COLD), (float)
+                            (2f * (Math.random())));
+                }
+                if (MathUtil.shiftedUniformRandom(10, 15, cold)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.SLOWNESS, temperatureTickThreshold + 2, (cold - 10) / 5, true, true, false));
+                }
+                if (MathUtil.shiftedUniformRandom(5, 15, cold)) {
+                    player.addStatusEffect(new StatusEffectInstance(
+                            StatusEffects.WEAKNESS, temperatureTickThreshold + 2, (cold - 5) / 5, true, true, false));
+                }
+            });
+    private int coldResistance = 0;
+    private int temperatureTickTimer;
+    private float cachedDelta = 0;
 
-	static HashMap<Block, Integer> temperatures = Tempus.config.blockTemperatures;
+    public float getTemperature() {
+        return temperature;
+    }
 
-	private final int lowTemperatureHeight = Tempus.config.lowTemperatureHeight;
-	private final int highTemperatureHeight = Tempus.config.highTemperatureHeight;
-	private final int inWaterSourceTemperature = Tempus.config.inWaterSourceTemperature;
-	private final int touchingWaterSourceTemperature = Tempus.config.touchingWaterSourceTemperature;
-	private final int wetSourceTemperature = Tempus.config.wetSourceTemperature;
+    public void setColdResistance(int coldResistance) {
+        this.coldResistance = coldResistance;
+    }
 
-	public float getTemperature() {
-		return temperature;
-	}
+    public void syncTemperature(PlayerEntity pl) {
+        if (pl instanceof ServerPlayerEntity player) {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            NbtCompound nbt = new NbtCompound();
+            writeNbt(nbt);
+            buffer.writeNbt(nbt);
+            ServerPlayNetworking.send(player, ServerEvents.TEMPERATURE, buffer);
+        }
+    }
 
-	public void setColdResistance(int coldResistance) {
-		this.coldResistance = coldResistance;
-	}
+    public void update(PlayerEntity player) {
+        insulation = Enchantments.INSULATION.getInsulationLevel(player) / 4;
+        temperatureTickTimer++;
+        if (temperatureTickTimer % environmentUpdateThreshold == 0) {
+            DeltaBuilder deltaBuilder = new DeltaBuilder(environmentUpdateThreshold);
 
-	public void syncTemperature(PlayerEntity pl) {
-		if (pl instanceof ServerPlayerEntity player) {
-			PacketByteBuf buffer = PacketByteBufs.create();
-			NbtCompound nbt = new NbtCompound();
-			writeNbt(nbt);
-			buffer.writeNbt(nbt);
-			ServerPlayNetworking.send(player, ServerEvents.TEMPERATURE, buffer);
-		}
-	}
+            for (int x = (int) player.getX() - radius; x <= player.getX() + radius; x++) {
+                for (int y = (int) player.getY() - radius; y <= player.getY() + radius; y++) {
+                    for (int z = (int) player.getZ() - radius; z <= player.getZ() + radius; z++) {
+                        float dist = (float) Math.sqrt(Math.pow(x - player.getX(), 2)
+                                + Math.pow(y - player.getY(), 2)
+                                + Math.pow(z - player.getZ(), 2));
+                        Block block = player.getWorld()
+                                .getBlockState(new BlockPos(x, y, z))
+                                .getBlock();
+                        if (temperatures.containsKey(block))
+                            deltaBuilder.addSource(
+                                    temperatures.get(block),
+                                    (float) Math.pow(1f - (dist / (radius * Math.sqrt(3))), 2) * 0.006f);
+                    }
+                }
+            }
 
-	public void update(PlayerEntity player) {
-		insulation = Enchantments.INSULATION.getInsulationLevel(player) / 4;
-		temperatureTickTimer++;
-		if (temperatureTickTimer % environmentUpdateThreshold == 0) {
-			DeltaBuilder deltaBuilder = new DeltaBuilder(environmentUpdateThreshold);
+            cachedDelta = deltaBuilder.getDelta();
+        }
+        if (temperatureTickTimer % temperatureTickThreshold == 0) {
+            float oldTemperature = temperature;
 
-			for (int x = (int) player.getX() - radius; x <= player.getX() + radius; x++) {
-				for (int y = (int) player.getY() - radius; y <= player.getY() + radius; y++) {
-					for (int z = (int) player.getZ() - radius; z <= player.getZ() + radius; z++) {
-						float dist = (float) Math.sqrt(Math.pow(x - player.getX(), 2) + Math.pow(y - player.getY(), 2) + Math.pow(z - player.getZ(), 2));
-						Block block = player.getWorld().getBlockState(new BlockPos(x, y, z)).getBlock();
-						if (temperatures.containsKey(block))
-							deltaBuilder.addSource(temperatures.get(block), (float) Math.pow(1f - (dist / (radius * Math.sqrt(3))), 2) * 0.006f);
-					}
-				}
-			}
+            DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
 
-			cachedDelta = deltaBuilder.getDelta();
-		}
-		if (temperatureTickTimer % temperatureTickThreshold == 0) {
-			float oldTemperature = temperature;
+            // Player's internal heat regulation
+            deltaBuilder.addUninsulatedSource(0, 0.01f);
+            // Seasons come into play
+            deltaBuilder.addSource(SeasonManager.getInstance().ambientTemperature(), 0.02f);
+            // Time of day as well
+            deltaBuilder.addSource(
+                    (float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
+            // Height in the world
+            if (player.getY() >= lowTemperatureHeight)
+                deltaBuilder.addSource(-2f - (float) (player.getY() - lowTemperatureHeight) / 10, 0.01f);
+            if (player.getY() <= highTemperatureHeight)
+                deltaBuilder.addSource(2f + (float) (highTemperatureHeight - player.getY()) / 10, 0.01f);
+            // And the blocks around
+            deltaBuilder.addDelta(cachedDelta);
 
-			DeltaBuilder deltaBuilder = new DeltaBuilder(temperatureTickThreshold);
+            if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
+                if (player.isSubmergedInWater()) {
+                    deltaBuilder.addSource(inWaterSourceTemperature, 0.05f);
+                } else if (player.isTouchingWater()) {
+                    deltaBuilder.addSource(touchingWaterSourceTemperature, 0.05f);
+                } else if (player.isWet()) {
+                    deltaBuilder.addSource(wetSourceTemperature, 0.01f);
+                }
+            }
 
-			// Player's internal heat regulation
-			deltaBuilder.addUninsulatedSource(0, 0.01f);
-			// Seasons come into play
-			deltaBuilder.addSource(SeasonManager.getInstance().ambientTemperature(), 0.02f);
-			// Time of day as well
-			deltaBuilder.addSource((float) Math.sin((float) player.getWorld().getTimeOfDay() / 24000 * 2 * Math.PI), 0.01f);
-			// Height in the world
-			if (player.getY() >= lowTemperatureHeight)
-				deltaBuilder.addSource(-2f - (float) (player.getY() - lowTemperatureHeight) / 10, 0.01f);
-			if (player.getY() <= highTemperatureHeight)
-				deltaBuilder.addSource(2f + (float) (highTemperatureHeight - player.getY()) / 10, 0.01f);
-			// And the blocks around
-			deltaBuilder.addDelta(cachedDelta);
+            deltaBuilder.applyDelta();
+            LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature - oldTemperature);
+            float affectingTemperature = temperature;
+            if (affectingTemperature < 0) {
+                affectingTemperature /= ((float) coldResistance / 2 + 1);
+            }
+            if (!player.isCreative()) effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
+            syncTemperature(player);
+        }
+        if (temperatureTickTimer >= environmentUpdateThreshold) temperatureTickTimer = 1;
+    }
 
-			if (!player.isCreative() && !player.hasStatusEffect(StatusEffects.WATER_BREATHING)) {
-				if (player.isSubmergedInWater()) {
-					deltaBuilder.addSource(inWaterSourceTemperature, 0.05f);
-				} else if (player.isTouchingWater()) {
-					deltaBuilder.addSource(touchingWaterSourceTemperature, 0.05f);
-				} else if (player.isWet()) {
-					deltaBuilder.addSource(wetSourceTemperature, 0.01f);
-				}
-			}
+    public void applySingular(float sourceTemperature, float heatConductivity) {
+        temperature += heatConductivity / (1 + insulation) * (sourceTemperature - temperature);
+    }
 
-			deltaBuilder.applyDelta();
-			LOGGER.info("temperature {} => {} (Δ {})", oldTemperature, temperature, temperature - oldTemperature);
-			float affectingTemperature = temperature;
-			if (affectingTemperature < 0) {
-				affectingTemperature /= ((float) coldResistance / 2 + 1);
-			}
-			if (!player.isCreative())
-				effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
-			syncTemperature(player);
-		}
-		if (temperatureTickTimer >= environmentUpdateThreshold) temperatureTickTimer = 1;
+    public void applyUninsulatedSingular(float sourceTemperature, float heatConductivity) {
+        temperature += heatConductivity * (sourceTemperature - temperature);
+    }
 
-	}
+    public void readNbt(NbtCompound nbt) {
+        if (nbt.contains("temperatureValue", NbtElement.NUMBER_TYPE)) {
+            temperature = nbt.getFloat("temperatureValue");
+            insulation = nbt.getFloat("temperatureInsulation");
+            temperatureTickTimer = nbt.getInt("temperatureTickTimer");
+        }
+    }
 
-	public class DeltaBuilder {
-		int tickCycle;
-		final int tickCycleMax = Tempus.config.tickCycleMax;
-		float temperatureDelta;
+    public void writeNbt(NbtCompound nbt) {
+        nbt.putFloat("temperatureValue", temperature);
+        nbt.putFloat("temperatureInsulation", insulation);
+        nbt.putInt("temperatureTickTimer", temperatureTickTimer);
+    }
 
-		public DeltaBuilder() {
-			temperatureDelta = 0;
-			tickCycle = tickCycleMax;
-		}
+    public interface MixinAccessor {
+        TemperatureManager tempus$getTemperatureManager();
+    }
 
-		public DeltaBuilder(int tickCycle) {
-			temperatureDelta = 0;
-			this.tickCycle = tickCycle;
-		}
+    public class DeltaBuilder {
+        final int tickCycleMax = Tempus.config.tickCycleMax;
+        int tickCycle;
+        float temperatureDelta;
 
-		public DeltaBuilder addSource(float sourceTemperature, float heatConductivity) {
-			temperatureDelta += heatConductivity / (1 + insulation) * (sourceTemperature - temperature);
-			return this;
-		}
+        public DeltaBuilder() {
+            temperatureDelta = 0;
+            tickCycle = tickCycleMax;
+        }
 
-		public DeltaBuilder addUninsulatedSource(float sourceTemperature, float heatConductivity) {
-			temperatureDelta += heatConductivity * (sourceTemperature - temperature);
-			return this;
-		}
+        public DeltaBuilder(int tickCycle) {
+            temperatureDelta = 0;
+            this.tickCycle = tickCycle;
+        }
 
-		public void applyDelta() {
-			temperature += temperatureDelta * ((float) tickCycle / tickCycleMax);
-		}
+        public DeltaBuilder addSource(float sourceTemperature, float heatConductivity) {
+            temperatureDelta += heatConductivity / (1 + insulation) * (sourceTemperature - temperature);
+            return this;
+        }
 
-		public float getDelta() {
-			return temperatureDelta;
-		}
+        public DeltaBuilder addUninsulatedSource(float sourceTemperature, float heatConductivity) {
+            temperatureDelta += heatConductivity * (sourceTemperature - temperature);
+            return this;
+        }
 
-		public void addDelta(float delta) {
-			temperatureDelta += delta;
-		}
-	}
+        public void applyDelta() {
+            temperature += temperatureDelta * ((float) tickCycle / tickCycleMax);
+        }
 
-	public void applySingular(float sourceTemperature, float heatConductivity) {
-		temperature += heatConductivity / (1 + insulation) * (sourceTemperature - temperature);
-	}
+        public float getDelta() {
+            return temperatureDelta;
+        }
 
-	public void applyUninsulatedSingular(float sourceTemperature, float heatConductivity) {
-		temperature += heatConductivity * (sourceTemperature - temperature);
-	}
-
-	public void readNbt(NbtCompound nbt) {
-		if (nbt.contains("temperatureValue", NbtElement.NUMBER_TYPE)) {
-			temperature = nbt.getFloat("temperatureValue");
-			insulation = nbt.getFloat("temperatureInsulation");
-			temperatureTickTimer = nbt.getInt("temperatureTickTimer");
-		}
-	}
-
-	public void writeNbt(NbtCompound nbt) {
-		nbt.putFloat("temperatureValue", temperature);
-		nbt.putFloat("temperatureInsulation", insulation);
-		nbt.putInt("temperatureTickTimer", temperatureTickTimer);
-	}
-
-	public interface MixinAccessor {
-		TemperatureManager tempus$getTemperatureManager();
-	}
+        public void addDelta(float delta) {
+            temperatureDelta += delta;
+        }
+    }
 }

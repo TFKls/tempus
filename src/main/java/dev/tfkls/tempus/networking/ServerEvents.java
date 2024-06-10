@@ -8,21 +8,24 @@ import net.minecraft.util.Identifier;
 
 public class ServerEvents {
 
-	public static final Identifier THIRST = new Identifier("tempus", "thirst");
-	public static final Identifier NUTRITION = new Identifier("tempus", "nutrition");
-	public static final Identifier TEMPERATURE = new Identifier("tempus", "temperature");
+    public static final Identifier THIRST = new Identifier("tempus", "thirst");
+    public static final Identifier NUTRITION = new Identifier("tempus", "nutrition");
+    public static final Identifier TEMPERATURE = new Identifier("tempus", "temperature");
 
-	public static void registerServerEvents() {
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ThirstManager thirstManager = ((ThirstManager.MixinAccessor) handler.getPlayer()).tempus$getThirstManager();
-			NutritionManager nutritionManager = ((NutritionManager.MixinAccessor) handler.getPlayer().getHungerManager()).tempus$getNutritionManager();
-			TemperatureManager temperatureManager = ((TemperatureManager.MixinAccessor) handler.getPlayer()).tempus$getTemperatureManager();
+    public static void registerServerEvents() {
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ThirstManager thirstManager = ((ThirstManager.MixinAccessor) handler.getPlayer()).tempus$getThirstManager();
+            NutritionManager nutritionManager = ((NutritionManager.MixinAccessor)
+                            handler.getPlayer().getHungerManager())
+                    .tempus$getNutritionManager();
+            TemperatureManager temperatureManager =
+                    ((TemperatureManager.MixinAccessor) handler.getPlayer()).tempus$getTemperatureManager();
 
-			server.execute(() -> {
-				thirstManager.syncThirst(handler.getPlayer());
-				nutritionManager.syncNutrition(handler.getPlayer());
-				temperatureManager.syncTemperature(handler.getPlayer());
-			});
-		});
-	}
+            server.execute(() -> {
+                thirstManager.syncThirst(handler.getPlayer());
+                nutritionManager.syncNutrition(handler.getPlayer());
+                temperatureManager.syncTemperature(handler.getPlayer());
+            });
+        });
+    }
 }

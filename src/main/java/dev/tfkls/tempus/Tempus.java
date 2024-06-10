@@ -18,47 +18,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Tempus implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
-	public static TempusConfig config;
+    // This logger is used to write text to the console and the log file.
+    // It is considered best practice to use your mod id as the logger's name.
+    // That way, it's clear which mod wrote info, warnings, and errors.
+    public static final Logger LOGGER = LoggerFactory.getLogger("tempus");
+    public static TempusConfig config;
 
-	@Override
-	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
-		LOGGER.info("Hello Fabric world!");
+    @Override
+    public void onInitialize() {
+        // This code runs as soon as Minecraft is in a mod-load-ready state.
+        // However, some things (like resources) may still be uninitialized.
+        // Proceed with mild caution.
+        LOGGER.info("Hello Fabric world!");
 
-		LOGGER.info("Loading config...");
-		config = TempusConfig.load();
+        LOGGER.info("Loading config...");
+        config = TempusConfig.load();
 
-		LOGGER.info("Registering commands...");
-		NutritionCommand.register();
-		SeasonCommand.register();
-		TemperatureCommand.register();
+        LOGGER.info("Registering commands...");
+        NutritionCommand.register();
+        SeasonCommand.register();
+        TemperatureCommand.register();
 
-		LOGGER.info("Registering enchantments...");
-		Enchantments.register();
+        LOGGER.info("Registering enchantments...");
+        Enchantments.register();
 
-		LOGGER.info("Registering custom items...");
-		DrinkableItems.register();
-		TempusItems.register();
+        LOGGER.info("Registering custom items...");
+        DrinkableItems.register();
+        TempusItems.register();
 
-		LOGGER.info("Registering status effects...");
-		CustomStatusEffects.register();
+        LOGGER.info("Registering status effects...");
+        CustomStatusEffects.register();
 
-		LOGGER.info("Saving config...");
-		config.save();
+        LOGGER.info("Saving config...");
+        config.save();
 
-		LOGGER.info("Registering server events...");
-		ServerEvents.registerServerEvents();
+        LOGGER.info("Registering server events...");
+        ServerEvents.registerServerEvents();
 
-		LOGGER.info("Registering gamerules...");
-		GameRuleRegistry.register("doSeasonCycle", GameRules.Category.UPDATES,
-				GameRuleFactory.createBooleanRule(true, (minecraftServer, value) -> {
-					SeasonManager.getInstance().updateSeasonCycle(value.get());
-				}));
-	}
+        LOGGER.info("Registering gamerules...");
+        GameRuleRegistry.register(
+                "doSeasonCycle",
+                GameRules.Category.UPDATES,
+                GameRuleFactory.createBooleanRule(true, (minecraftServer, value) -> {
+                    SeasonManager.getInstance().updateSeasonCycle(value.get());
+                }));
+    }
 }

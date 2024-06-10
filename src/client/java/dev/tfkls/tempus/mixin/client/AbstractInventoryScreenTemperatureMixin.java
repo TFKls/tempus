@@ -14,12 +14,12 @@ import java.util.List;
 
 @Mixin(AbstractInventoryScreen.class)
 public class AbstractInventoryScreenTemperatureMixin {
-   @Unique
-   private final List<StatusEffect> hiddenEffects = List.of(CustomStatusEffects.THIRST);
+    @Unique
+    private final List<StatusEffect> hiddenEffects = List.of(CustomStatusEffects.THIRST);
 
-   @ModifyVariable(method = "drawStatusEffects", at = @At("STORE"), ordinal = 0)
-   private Collection<StatusEffectInstance> modifyDrawnStatusEffects(Collection<StatusEffectInstance> collection) {
-       collection.removeIf((elem) -> hiddenEffects.contains(elem.getEffectType()));
-       return collection;
-   }
+    @ModifyVariable(method = "drawStatusEffects", at = @At("STORE"), ordinal = 0)
+    private Collection<StatusEffectInstance> modifyDrawnStatusEffects(Collection<StatusEffectInstance> collection) {
+        collection.removeIf((elem) -> hiddenEffects.contains(elem.getEffectType()));
+        return collection;
+    }
 }

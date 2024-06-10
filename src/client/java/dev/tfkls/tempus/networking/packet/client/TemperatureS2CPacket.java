@@ -9,7 +9,8 @@ import net.minecraft.network.PacketByteBuf;
 
 public class TemperatureS2CPacket {
 
-    public static void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
+    public static void receive(
+            MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buf, PacketSender sender) {
         NbtCompound nbt = buf.readNbt();
 
         client.execute(() -> {

@@ -23,6 +23,36 @@ public class TemperatureCommand implements CommandRegistrationCallback {
 		CommandRegistrationCallback.EVENT.register(new TemperatureCommand());
 	}
 
+	private static int executeClear(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
+		return executeSet(source, 0f, false, players);
+	}
+
+	private static int executeQuery(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
+		for (PlayerEntity player : players) {
+			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.query", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
+		}
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static int executeSet(ServerCommandSource source, float value, boolean isAdd, Collection<ServerPlayerEntity> players) {
+		for (PlayerEntity player : players) {
+			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
+			float goal = (isAdd ? manager.getTemperature() : 0) + value;
+			manager.applyUninsulatedSingular(0, 1f);
+			manager.applyUninsulatedSingular(value, 1f);
+			manager.syncTemperature(player);
+		}
+		if (players.size() == 1) {
+			PlayerEntity player = players.iterator().next();
+			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.single", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
+		} else {
+			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.multiple", players.size(), (isAdd ? "by" : "to"), String.valueOf(value)), true);
+		}
+		return Command.SINGLE_SUCCESS;
+	}
+
 	/**
 	 * Called when the server is registering commands.
 	 *
@@ -53,36 +83,6 @@ public class TemperatureCommand implements CommandRegistrationCallback {
 								.then(argument("targets", EntityArgumentType.players())
 										.executes(context -> executeSet(context.getSource(), context.getArgument("value", float.class), true, context.getArgument("targets", EntitySelector.class).getPlayers(context.getSource()))))))
 		);
-	}
-
-	private static int executeClear(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
-		return executeSet(source, 0f, false, players);
-	}
-
-	private static int executeQuery(ServerCommandSource source, Collection<ServerPlayerEntity> players) {
-		for (PlayerEntity player : players) {
-			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
-			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.query", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
-		}
-		return Command.SINGLE_SUCCESS;
-	}
-
-	private static int executeSet(ServerCommandSource source, float value, boolean isAdd, Collection<ServerPlayerEntity> players) {
-		for (PlayerEntity player : players) {
-			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
-			float goal = (isAdd ? manager.getTemperature() : 0) + value;
-			manager.applyUninsulatedSingular(0, 1f);
-			manager.applyUninsulatedSingular(value, 1f);
-			manager.syncTemperature(player);
-		}
-		if (players.size() == 1) {
-			PlayerEntity player = players.iterator().next();
-			TemperatureManager manager = ((TemperatureManager.MixinAccessor) player).tempus$getTemperatureManager();
-			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.single", player.getDisplayName(), String.valueOf(manager.getTemperature())), true);
-		} else {
-			source.sendFeedback(() -> Text.translatable("command.tempus.temperature.set.multiple", players.size(), (isAdd ? "by" : "to"), String.valueOf(value)), true);
-		}
-		return Command.SINGLE_SUCCESS;
 	}
 }
 

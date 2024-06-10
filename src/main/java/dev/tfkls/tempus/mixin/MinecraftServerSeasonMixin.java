@@ -10,13 +10,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerSeasonMixin {
-	@Inject(method = "loadWorld", at = @At(value = "TAIL"))
-	void loadSeasonData(CallbackInfo ci) {
-		SeasonManager.getInstance().loadServer((MinecraftServer) (Object) this);
-	}
+    @Inject(method = "loadWorld", at = @At(value = "TAIL"))
+    void loadSeasonData(CallbackInfo ci) {
+        SeasonManager.getInstance().loadServer((MinecraftServer) (Object) this);
+    }
 
-	@Inject(method = "shutdown", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;save(ZZZ)Z"))
-	void saveSeasonData(CallbackInfo ci) {
-		SeasonServerState.getServerState((MinecraftServer) (Object) this).loadSeasonManager(SeasonManager.getInstance());
-	}
+    @Inject( method = "shutdown",
+             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;save(ZZZ)Z"))
+    void saveSeasonData(CallbackInfo ci) {
+        SeasonServerState.getServerState((MinecraftServer) (Object) this)
+                .loadSeasonManager(SeasonManager.getInstance());
+    }
 }

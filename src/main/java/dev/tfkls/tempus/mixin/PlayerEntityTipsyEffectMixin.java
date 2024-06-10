@@ -8,17 +8,16 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityTipsyEffectMixin implements TipsyStatusEffect.MixinAccessor {
 
-	@Unique
-	protected boolean isTipsy = false;
+    @Unique
+    protected boolean isTipsy = false;
 
-	@Unique
-	public boolean tempus$isTipsy() {
-		return this.isTipsy;
-	}
+    @Unique
+    public boolean tempus$isTipsy() {
+        return this.isTipsy;
+    }
 
-	@Unique
-	public void tempus$setTipsy(boolean isTipsy) {
-		this.isTipsy = isTipsy;
-	}
+    @Unique
+    public void tempus$setTipsy(boolean isTipsy) {
+        this.isTipsy = isTipsy;
+    }
 }
-
