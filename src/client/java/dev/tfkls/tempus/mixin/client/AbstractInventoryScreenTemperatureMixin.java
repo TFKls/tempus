@@ -1,6 +1,6 @@
 package dev.tfkls.tempus.mixin.client;
 
-import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effect.CustomStatusEffects;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;

@@ -1,7 +1,6 @@
 package dev.tfkls.tempus.item;
 
-import dev.tfkls.tempus.Tempus;
-import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effect.CustomStatusEffects;
 import dev.tfkls.tempus.misc.DrinkComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;

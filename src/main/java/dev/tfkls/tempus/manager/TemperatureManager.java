@@ -1,8 +1,8 @@
 package dev.tfkls.tempus.manager;
 
 import dev.tfkls.tempus.Tempus;
-import dev.tfkls.tempus.effects.CustomStatusEffects;
-import dev.tfkls.tempus.effects.PlayerStatusEffector;
+import dev.tfkls.tempus.effect.CustomStatusEffects;
+import dev.tfkls.tempus.effect.PlayerStatusEffector;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.networking.ServerEvents;
 import dev.tfkls.tempus.misc.CustomDamageSources;
@@ -10,7 +10,6 @@ import dev.tfkls.tempus.util.MathUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;

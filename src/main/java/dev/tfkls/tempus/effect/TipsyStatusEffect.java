@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.effects;
+package dev.tfkls.tempus.effect;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;

@@ -1,7 +1,7 @@
 package dev.tfkls.tempus.manager;
 
 import dev.tfkls.tempus.Tempus;
-import dev.tfkls.tempus.effects.PlayerStatusEffector;
+import dev.tfkls.tempus.effect.PlayerStatusEffector;
 import dev.tfkls.tempus.misc.NutritionType;
 import dev.tfkls.tempus.networking.ServerEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

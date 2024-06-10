@@ -2,7 +2,7 @@ package dev.tfkls.tempus.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effect.CustomStatusEffects;
 import dev.tfkls.tempus.manager.TemperatureManager;
 import dev.tfkls.tempus.manager.ThirstManager;
 import dev.tfkls.tempus.manager.NutritionManager;

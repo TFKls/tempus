@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.effects;
+package dev.tfkls.tempus.effect;
 
 import dev.tfkls.tempus.manager.TemperatureManager;
 import net.minecraft.entity.LivingEntity;

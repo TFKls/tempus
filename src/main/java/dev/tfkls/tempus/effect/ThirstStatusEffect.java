@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.effects;
+package dev.tfkls.tempus.effect;
 
 import dev.tfkls.tempus.Tempus;
 import dev.tfkls.tempus.manager.ThirstManager;

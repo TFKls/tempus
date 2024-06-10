@@ -4,7 +4,7 @@ import dev.tfkls.tempus.command.NutritionCommand;
 import dev.tfkls.tempus.command.SeasonCommand;
 import dev.tfkls.tempus.command.TemperatureCommand;
 import dev.tfkls.tempus.config.TempusConfig;
-import dev.tfkls.tempus.effects.CustomStatusEffects;
+import dev.tfkls.tempus.effect.CustomStatusEffects;
 import dev.tfkls.tempus.item.DrinkableItems;
 import dev.tfkls.tempus.item.Enchantments;
 import dev.tfkls.tempus.item.TempusItems;

@@ -1,4 +1,4 @@
-package dev.tfkls.tempus.effects;
+package dev.tfkls.tempus.effect;
 
 import dev.tfkls.tempus.Tempus;
 import net.minecraft.entity.effect.StatusEffect;
