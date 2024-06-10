@@ -2,8 +2,10 @@ package dev.tfkls.tempus.item;
 
 import dev.tfkls.tempus.effect.CustomStatusEffects;
 import dev.tfkls.tempus.misc.DrinkComponent;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -60,5 +62,20 @@ public class DrinkableItems {
 		Registry.register(Registries.ITEM, new Identifier("tempus", "energetic_extract"), ENERGETIC_EXTRACT);
 		Registry.register(Registries.ITEM, new Identifier("tempus", "energy_mixture"), ENERGY_MIXTURE);
 		Registry.register(Registries.ITEM, new Identifier("tempus", "bepis_can"), BEPIS_CAN);
+
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
+			content.add(PURIFIED_WATER_BOTTLE);
+			content.add(WHEAT_EXTRACT);
+			content.add(WHEAT_BEER);
+			content.add(WOODEN_MUG);
+			content.add(MUG_OF_WATER);
+			content.add(WINE_BASE);
+			content.add(WINE_BOTTLE);
+			content.add(COPPER_CAN);
+			content.add(CAN_OF_WATER);
+			content.add(ENERGY_MIXTURE);
+			content.add(ENERGETIC_EXTRACT);
+			content.add(BEPIS_CAN);
+		});
 	}
 }
