@@ -4,6 +4,7 @@
   "death.attack.extreme_cold": "%1$s died from extreme_cold!",
   "effect.tempus.thirst": "Thirst",
   "effect.tempus.cold_resistance": "Cold Resistance",
+  "effect.tempus.tipsy": "Tipsy",
 
   "command.tempus.season.query": "Current season is %s",
   "command.tempus.season.set": "Set absolute offset to %s; relative is %s",
@@ -16,5 +17,19 @@
 
   "command.tempus.temperature.query": "%s's temperature: %s",
   "command.tempus.temperature.set.single": "%s's new temperature: %s",
-  "command.tempus.temperature.set.multiple": "Updated temperature of %d players %s: %s"
+  "command.tempus.temperature.set.multiple": "Updated temperature of %d players %s: %s",
+
+  "item.tempus.thermometer": "Thermometer",
+  "item.tempus.purified_water_bottle": "Purified Water Bottle",
+  "item.tempus.wooden_mug": "Wooden Mug",
+  "item.tempus.mug_of_water": "Mug of Water",
+  "item.tempus.wheat_extract": "Wheat Extract",
+  "item.tempus.wheat_beer": "Wheat Beer",
+  "item.tempus.wine_base": "Wine Base",
+  "item.tempus.wine_bottle": "Wine Bottle",
+  "item.tempus.copper_can": "Copper Can",
+  "item.tempus.can_of_water": "Can of Water",
+  "item.tempus.energetic_extract": "Energetic Extract",
+  "item.tempus.energy_mixture": "Energy Mixture",
+  "item.tempus.bepis_can": "Bepis Can"
 }
