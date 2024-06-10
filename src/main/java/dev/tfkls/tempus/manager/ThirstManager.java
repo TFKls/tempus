@@ -69,6 +69,7 @@ public class ThirstManager {
 			}
 			unpurifiedQueue = false;
 		}
+		if (player.isCreative()) return;
 		thirstTickTimer++;
 		if (thirstTickTimer >= thirstTickThreshold) {
 
