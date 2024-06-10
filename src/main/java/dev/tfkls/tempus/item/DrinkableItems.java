@@ -50,13 +50,16 @@ public class DrinkableItems {
 
 	public static void register() {
 		Registry.register(Registries.ITEM, new Identifier("tempus", "purified_water_bottle"), PURIFIED_WATER_BOTTLE);
-		Tempus.LOGGER.info("Registered Purified Water Bottle");
 		Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_extract"), WHEAT_EXTRACT);
-		Tempus.LOGGER.info("Registered Wheat Extract");
 		Registry.register(Registries.ITEM, new Identifier("tempus", "wheat_beer"), WHEAT_BEER);
-		Tempus.LOGGER.info("Registered Wheat Beer");
-
 		Registry.register(Registries.ITEM, new Identifier("tempus", "wooden_mug"), WOODEN_MUG);
 		Registry.register(Registries.ITEM, new Identifier("tempus", "mug_of_water"), MUG_OF_WATER);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "wine_base"), WINE_BASE);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "wine_bottle"), WINE_BOTTLE);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "copper_can"), COPPER_CAN);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "can_of_water"), CAN_OF_WATER);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "energetic_extract"), ENERGETIC_EXTRACT);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "energy_mixture"), ENERGY_MIXTURE);
+		Registry.register(Registries.ITEM, new Identifier("tempus", "bepis_can"), BEPIS_CAN);
 	}
 }
