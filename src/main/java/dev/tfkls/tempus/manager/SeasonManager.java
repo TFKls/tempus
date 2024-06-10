@@ -8,11 +8,6 @@ import net.minecraft.world.World;
 
 import static dev.tfkls.tempus.Tempus.LOGGER;
 
-/* TODO:
-    - Think about day/night cycle, whether we want to break it a bit in favour of more realism (probably lot of work)
-    - Make Biome mixin actually work and snow in the winter
- */
-
 
 /**
  * This class is a singleton which manages the seasons for the currently loaded world.
