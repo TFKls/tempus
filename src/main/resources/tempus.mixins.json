@@ -12,6 +12,7 @@
     "MinecraftServerSeasonMixin",
     "PlayerEntityTemperatureMixin",
     "PlayerEntityThirstMixin",
+    "PlayerEntityTipsyEffectMixin",
     "PotionItemThirstMixin",
     "ServerChunkManagerSeasonMixin"
   ],
