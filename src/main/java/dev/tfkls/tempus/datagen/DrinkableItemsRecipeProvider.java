@@ -39,6 +39,13 @@ public class DrinkableItemsRecipeProvider extends FabricRecipeProvider {
                                        .criterion(FabricRecipeProvider.hasItem(STICK),
                                                FabricRecipeProvider.conditionsFromItem(STICK))
                                        .offerTo(exporter);
+        ShapedRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.COPPER_CAN, 1)
+                                       .pattern("c")
+                                               .pattern("c")
+                                       .input('c', COPPER_INGOT)
+                                       .criterion(FabricRecipeProvider.hasItem(COPPER_INGOT),
+                                               FabricRecipeProvider.conditionsFromItem(COPPER_INGOT))
+                                       .offerTo(exporter);
         ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WHEAT_EXTRACT, 1)
                 .input(DrinkableItems.MUG_OF_WATER)
                 .input(WHEAT, 2)
@@ -52,16 +59,57 @@ public class DrinkableItemsRecipeProvider extends FabricRecipeProvider {
                 .input(WHEAT, 2)
                 .input(BROWN_MUSHROOM)
                 .criterion(
-                        hasItem(DrinkableItems.MUG_OF_WATER),
+                        RecipeProvider.hasItem(DrinkableItems.MUG_OF_WATER),
                         RecipeProvider.conditionsFromItem(DrinkableItems.MUG_OF_WATER))
                 .offerTo(exporter, RecipeProvider.getItemPath(DrinkableItems.WHEAT_EXTRACT) + "_from_brown_mushroom");
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.WINE_BASE, 1)
+                                          .input(DrinkableItems.PURIFIED_WATER_BOTTLE)
+                                          .input(SWEET_BERRIES, 8)
+                                          .criterion(
+                                                  RecipeProvider.hasItem(DrinkableItems.PURIFIED_WATER_BOTTLE)
+                                                  , RecipeProvider.conditionsFromItem(DrinkableItems.PURIFIED_WATER_BOTTLE)
+                                          ).offerTo(exporter);
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.BEPIS_CAN, 1)
+                                          .input(DrinkableItems.COPPER_CAN)
+                                          .input(SUGAR)
+                                          .input(INK_SAC)
+                                          .input(CHORUS_FRUIT)
+                                          .criterion(RecipeProvider.hasItem(DrinkableItems.COPPER_CAN),
+                                          RecipeProvider.conditionsFromItem(DrinkableItems.COPPER_CAN))
+                .offerTo(exporter);
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.FOOD, DrinkableItems.ENERGETIC_EXTRACT, 1)
+                                  .input(DrinkableItems.COPPER_CAN)
+                                  .input(SUGAR, 3)
+                                  .input(COCOA_BEANS)
+                                  .input(GLISTERING_MELON_SLICE)
+                                  .criterion(RecipeProvider.hasItem(DrinkableItems.COPPER_CAN),
+                                          RecipeProvider.conditionsFromItem(DrinkableItems.COPPER_CAN))
+                                  .offerTo(exporter);
         RecipeProvider.offerFoodCookingRecipe(
                 exporter,
-                "drink_fermenter",
+                "campfire",
                 RecipeSerializer.CAMPFIRE_COOKING,
                 600,
                 DrinkableItems.WHEAT_EXTRACT,
                 DrinkableItems.WHEAT_BEER,
                 1f);
+        RecipeProvider.offerFoodCookingRecipe(
+                exporter,
+                "campfire",
+                RecipeSerializer.CAMPFIRE_COOKING,
+                1200,
+                DrinkableItems.WINE_BASE,
+                DrinkableItems.WINE_BOTTLE,
+                1f
+        );
+        RecipeProvider.offerFoodCookingRecipe(
+                exporter,
+                "campfire",
+                RecipeSerializer.CAMPFIRE_COOKING,
+                600,
+                DrinkableItems.ENERGETIC_EXTRACT,
+                DrinkableItems.ENERGY_MIXTURE,
+                1f
+        );
     }
 }
