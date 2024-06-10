@@ -26,5 +26,12 @@ public class CustomItemModelProvider extends FabricModelProvider {
         itemModelGenerator.register(DrinkableItems.MUG_OF_WATER, Models.GENERATED);
         itemModelGenerator.register(DrinkableItems.WHEAT_EXTRACT, Models.GENERATED);
         itemModelGenerator.register(DrinkableItems.WHEAT_BEER, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.WINE_BASE, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.WINE_BOTTLE, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.COPPER_CAN, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.CAN_OF_WATER, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.ENERGETIC_EXTRACT, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.ENERGY_MIXTURE, Models.GENERATED);
+        itemModelGenerator.register(DrinkableItems.BEPIS_CAN, Models.GENERATED);
     }
 }

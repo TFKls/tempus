@@ -73,8 +73,8 @@ public class DrinkableItems {
 			content.add(WINE_BOTTLE);
 			content.add(COPPER_CAN);
 			content.add(CAN_OF_WATER);
-			content.add(ENERGY_MIXTURE);
 			content.add(ENERGETIC_EXTRACT);
+			content.add(ENERGY_MIXTURE);
 			content.add(BEPIS_CAN);
 		});
 	}
