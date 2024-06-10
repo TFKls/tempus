@@ -173,7 +173,8 @@ public class TemperatureManager {
 			if (affectingTemperature < 0) {
 				affectingTemperature /= ((float) coldResistance / 2 + 1);
 			}
-			effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
+			if (!player.isCreative())
+				effector.runEffect(player, MathUtil.roundUp(affectingTemperature));
 			syncTemperature(player);
 		}
 		if (temperatureTickTimer >= environmentUpdateThreshold) temperatureTickTimer = 1;
